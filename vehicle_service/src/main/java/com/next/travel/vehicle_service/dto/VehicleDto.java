@@ -1,8 +1,6 @@
 package com.next.travel.vehicle_service.dto;
 
 
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Lob;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,7 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class Vehicle {
+public class VehicleDto {
     private String vehicleId;
     private String brand;
     private String category;
