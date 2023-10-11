@@ -1,20 +1,16 @@
 package com.next.travel.vehicle_service.entity;
 
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Entity(name = "driver")
+@Entity(name = "vehicle")
 public class VehicleEntity {
     @Id
     private String vehicleId;
@@ -29,10 +25,13 @@ public class VehicleEntity {
     private String availability;
     private String remark;
 
-    @Lob
     @ElementCollection
-    private List<byte[]> images;
+    @CollectionTable(name = "image_data", joinColumns = @JoinColumn(name = "entity_id"))
+    @Column(name = "image", columnDefinition = "BLOB")
+    private List<Byte[]> imageList;
 
-    private String driverId;
+    @OneToOne
+    @JoinColumn(name = "driver_id")
+    private DriverEntity driver;
 
 }
