@@ -24,6 +24,6 @@ public class VehicleDto {
     private String remark;
     private List<byte[]> images;
 
-    private String driverId;
+    private DriverDto driverDto;
 
 }

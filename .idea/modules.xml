@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/spring_boot_final_backend.iml" filepath="$PROJECT_DIR$/spring_boot_final_backend.iml" />
+      <module fileurl="file://$PROJECT_DIR$/vehicle_service/vehicle_service.iml" filepath="$PROJECT_DIR$/vehicle_service/vehicle_service.iml" />
     </modules>
   </component>
 </project>

@@ -13,4 +13,7 @@ public class DriverDto {
     private String contactNo;
     private byte[] licenseFront;
     private byte[] licenseBack;
+
+    private VehicleDto vehicleDto;
+
 }

@@ -2,7 +2,6 @@ package com.next.travel.guide_service.service.impl;
 
 import com.next.travel.guide_service.dto.GuideDto;
 import com.next.travel.guide_service.entity.GuideEntity;
-import com.next.travel.guide_service.exception.InvalidException;
 import com.next.travel.guide_service.exception.NotFoundException;
 import com.next.travel.guide_service.repository.GuideRepo;
 import com.next.travel.guide_service.service.GuideService;
