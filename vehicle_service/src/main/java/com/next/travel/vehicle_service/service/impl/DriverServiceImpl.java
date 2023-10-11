@@ -57,4 +57,9 @@ public class DriverServiceImpl implements DriverService {
         }
         return list;
     }
+
+    @Override
+    public String getLastId() {
+        return driverRepo.getLastId();
+    }
 }

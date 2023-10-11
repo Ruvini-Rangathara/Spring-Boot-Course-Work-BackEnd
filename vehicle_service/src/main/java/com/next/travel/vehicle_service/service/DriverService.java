@@ -10,5 +10,6 @@ public interface DriverService {
     void delete(String id);
     DriverDto searchById(String id);
     List<DriverDto> getAll();
+    String getLastId();
 
 }
