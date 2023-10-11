@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Transactional
 @Service
 public class GuideServiceImpl implements GuideService {
@@ -39,5 +42,15 @@ public class GuideServiceImpl implements GuideService {
     @Override
     public GuideDto searchById(String id) {
         return convertor.getGuideDto(guideRepo.getReferenceById(id));
+    }
+
+    @Override
+    public List<GuideDto> getAll() {
+        List<GuideEntity> all = guideRepo.findAll();
+        List<GuideDto> list = new ArrayList<>();
+        for (GuideEntity entity: all) {
+            list.add(convertor.getGuideDto(entity));
+        }
+        return list;
     }
 }
