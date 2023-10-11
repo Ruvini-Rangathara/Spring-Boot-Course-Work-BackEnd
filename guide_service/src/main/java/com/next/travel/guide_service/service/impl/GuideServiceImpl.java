@@ -2,6 +2,8 @@ package com.next.travel.guide_service.service.impl;
 
 import com.next.travel.guide_service.dto.GuideDto;
 import com.next.travel.guide_service.entity.GuideEntity;
+import com.next.travel.guide_service.exception.InvalidException;
+import com.next.travel.guide_service.exception.NotFoundException;
 import com.next.travel.guide_service.repository.GuideRepo;
 import com.next.travel.guide_service.service.GuideService;
 import com.next.travel.guide_service.util.mapper.Convertor;
@@ -34,6 +36,7 @@ public class GuideServiceImpl implements GuideService {
 
     @Override
     public void delete(String id) {
+        if(!guideRepo.existsById(id)) throw new NotFoundException("Guide Not Found!");
         GuideEntity guideEntity = new GuideEntity();
         guideEntity.setGuideId(id);
         guideRepo.delete(guideEntity);
@@ -41,6 +44,7 @@ public class GuideServiceImpl implements GuideService {
 
     @Override
     public GuideDto searchById(String id) {
+        if(!guideRepo.existsById(id)) throw new NotFoundException("Guide Not Found!");
         return convertor.getGuideDto(guideRepo.getReferenceById(id));
     }
 
