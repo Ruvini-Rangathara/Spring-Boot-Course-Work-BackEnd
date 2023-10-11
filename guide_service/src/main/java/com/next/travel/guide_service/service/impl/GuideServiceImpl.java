@@ -56,4 +56,9 @@ public class GuideServiceImpl implements GuideService {
         }
         return list;
     }
+
+    @Override
+    public String getLastId() {
+        return guideRepo.getLastId();
+    }
 }

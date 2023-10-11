@@ -10,5 +10,5 @@ public interface GuideService {
     void delete(String id);
     GuideDto searchById(String id);
     List<GuideDto> getAll();
-
+    String getLastId();
 }
