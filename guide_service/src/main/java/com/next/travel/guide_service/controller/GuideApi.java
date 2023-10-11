@@ -4,6 +4,7 @@ import com.next.travel.guide_service.dto.GuideDto;
 import com.next.travel.guide_service.service.GuideService;
 import com.next.travel.guide_service.util.StandardResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
