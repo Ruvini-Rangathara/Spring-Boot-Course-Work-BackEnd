@@ -16,7 +16,7 @@ import java.io.Serializable;
 public class DiscountEntity implements Serializable {
     @Id
     private String code;
-    private String range;
+    private String discountRange;
     private double rate;
 
     // Define the many-to-one relationship with HotelEntity

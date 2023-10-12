@@ -13,7 +13,7 @@ import java.io.Serializable;
 public class DiscountDto implements Serializable {
 
     private String code;
-    private String range;
+    private String discountRange;
     private double rate;
     private HotelEntity hotel;
 }

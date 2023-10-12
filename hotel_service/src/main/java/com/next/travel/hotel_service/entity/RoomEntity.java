@@ -18,7 +18,7 @@ public class RoomEntity implements Serializable {
     @Id
     private String roomId;
     private String category;
-    private String capacity;
+    private int capacity;
     private double price;
     private String availability;
 

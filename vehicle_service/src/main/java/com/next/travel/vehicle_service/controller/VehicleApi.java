@@ -68,4 +68,12 @@ public class VehicleApi {
         );
     }
 
+    @GetMapping(path = "/id")
+    public ResponseEntity<StandardResponse> getLastId(){
+        return new ResponseEntity<>(
+                new StandardResponse(200,"Last Vehicle code! ", vehicleService.getLastId()),
+                HttpStatus.OK
+        );
+    }
+
 }

@@ -81,4 +81,12 @@ public class GuideApi {
         );
     }
 
+    @GetMapping(path = "/id")
+    public ResponseEntity<StandardResponse> getLastId(){
+        return new ResponseEntity<>(
+                new StandardResponse(200,"Last Guide id! ", guideService.getLastId()),
+                HttpStatus.OK
+        );
+    }
+
 }
