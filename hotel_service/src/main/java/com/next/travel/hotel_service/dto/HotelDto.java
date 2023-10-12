@@ -1,19 +1,18 @@
 package com.next.travel.hotel_service.dto;
 
-import jakarta.persistence.CollectionTable;
-import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.JoinColumn;
+import com.next.travel.hotel_service.entity.DiscountEntity;
+import com.next.travel.hotel_service.entity.RoomEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class HotelDto {
+public class HotelDto implements Serializable {
     private String hotelCode;
     private String name;
     private String category;
@@ -23,5 +22,4 @@ public class HotelDto {
     private String petsAllowedOrNot;
     private String cancellationCriteria;
     private List<Byte[]> imageList;
-
 }

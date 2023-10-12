@@ -7,11 +7,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Entity(name = "discount")
-public class DiscountEntity {
+public class DiscountEntity implements Serializable {
     @Id
     private String code;
     private String range;

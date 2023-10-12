@@ -12,4 +12,5 @@ public interface RoomService {
     RoomDto searchById(String id);
     List<RoomDto> getAll();
     String getLastId();
+
 }

@@ -8,11 +8,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Entity(name = "room")
-public class RoomEntity {
+public class RoomEntity implements Serializable {
     @Id
     private String roomId;
     private String category;

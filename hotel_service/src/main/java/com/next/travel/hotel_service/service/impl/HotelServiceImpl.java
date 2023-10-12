@@ -1,7 +1,9 @@
 package com.next.travel.hotel_service.service.impl;
 
 import com.next.travel.hotel_service.dto.HotelDto;
+import com.next.travel.hotel_service.dto.RoomDto;
 import com.next.travel.hotel_service.entity.HotelEntity;
+import com.next.travel.hotel_service.entity.RoomEntity;
 import com.next.travel.hotel_service.exception.NotFoundException;
 import com.next.travel.hotel_service.repository.HotelRepo;
 import com.next.travel.hotel_service.service.HotelService;
@@ -59,5 +61,15 @@ public class HotelServiceImpl implements HotelService {
     @Override
     public String getLastId() {
         return hotelRepo.getLastId();
+    }
+
+    @Override
+    public List<RoomDto> getRoomsByHotelCodeAndCategory(String hotelCode, String category) {
+        List<RoomEntity> all = hotelRepo.getRoomsByHotelCodeAndCategory(hotelCode,category);
+        List<RoomDto> list = new ArrayList<>();
+        for (RoomEntity entity: all) {
+            list.add(convertor.getRoomDto(entity));
+        }
+        return list;
     }
 }
