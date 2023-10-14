@@ -1,14 +1,15 @@
 package com.next.travel.hotel_service.controller;
 
 import com.next.travel.hotel_service.dto.DiscountDto;
-import com.next.travel.hotel_service.dto.HotelDto;
+import com.next.travel.hotel_service.exception.InvalidException;
 import com.next.travel.hotel_service.service.DiscountService;
-import com.next.travel.hotel_service.service.HotelService;
 import com.next.travel.hotel_service.util.StandardResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping("/api/v1/discount")
@@ -23,18 +24,19 @@ public class DiscountApi {
 
     @PostMapping
     public ResponseEntity<StandardResponse> addDiscount(@RequestBody DiscountDto discountDto) {
+        validateDiscountData(discountDto);
         discountService.save(discountDto);
         return new ResponseEntity<>(new StandardResponse(201, "Saved successfully!!", discountDto.toString()), HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<StandardResponse> findDiscount(@PathVariable String id) {
-        DiscountDto discountDto = discountService.searchById(id);
         return new ResponseEntity<>(new StandardResponse(200, "Discount was found!", discountService.searchById(id)), HttpStatus.OK);
     }
 
     @PutMapping
     public ResponseEntity<StandardResponse> updateDiscount(@RequestParam String id, @RequestBody DiscountDto discountDto) {
+        validateDiscountData(discountDto);
         discountService.update(discountDto);
         return new ResponseEntity<>(new StandardResponse(201, "Updated Discount Data!", discountDto.toString()), HttpStatus.OK);
 
@@ -52,11 +54,17 @@ public class DiscountApi {
     }
 
     @GetMapping(path = "/id")
-    public ResponseEntity<StandardResponse> getLastId(){
-        return new ResponseEntity<>(
-                new StandardResponse(200,"Last Discount id! ", discountService.getLastId()),
-                HttpStatus.OK
-        );
+    public ResponseEntity<StandardResponse> getLastId() {
+        return new ResponseEntity<>(new StandardResponse(200, "Last Discount id! ", discountService.getLastId()), HttpStatus.OK);
+    }
+
+    private void validateDiscountData(DiscountDto discountDto) throws RuntimeException {
+        if (!Pattern.compile("^DIS\\\\d{4}$").matcher(discountDto.getCode()).matches()) {
+            throw new InvalidException("Invalid id type!");
+
+        } else if (!Pattern.compile("^\\d+(\\.\\d+)?$\n").matcher(String.valueOf(discountDto.getRate())).matches()) {
+            throw new InvalidException("Invalid rate!");
+        }
     }
 
 }
