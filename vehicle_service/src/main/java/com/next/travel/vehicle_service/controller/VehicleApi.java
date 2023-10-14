@@ -3,6 +3,7 @@ package com.next.travel.vehicle_service.controller;
 
 import com.next.travel.vehicle_service.dto.VehicleDto;
 import com.next.travel.vehicle_service.exception.InvalidException;
+import com.next.travel.vehicle_service.service.DriverService;
 import com.next.travel.vehicle_service.service.VehicleService;
 import com.next.travel.vehicle_service.util.StandardResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +18,12 @@ import java.util.regex.Pattern;
 public class VehicleApi {
 
     private final VehicleService vehicleService;
+    private final DriverService driverService;
 
     @Autowired
-    public VehicleApi(VehicleService vehicleService) {
+    public VehicleApi(VehicleService vehicleService, DriverService driverService) {
         this.vehicleService = vehicleService;
+        this.driverService = driverService;
     }
 
 
@@ -72,10 +75,31 @@ public class VehicleApi {
         );
     }
 
-    @GetMapping(path = "/id")
-    public ResponseEntity<StandardResponse> getLastId(){
+    @GetMapping(path = "/vehicleid")
+    public ResponseEntity<StandardResponse> getVehicleNewId(){
+        String lastId = vehicleService.getLastId(); // Get the last ID
+        String prefix = lastId.substring(0, 1); // Extract the prefix (e.g., "G")
+        int number = Integer.parseInt(lastId.substring(1)); // Extract the number (e.g., 0003)
+        number++; // Increment the number
+        String newId = String.format("%s%04d", prefix, number); // Create the new ID with zero-padding
+
+
         return new ResponseEntity<>(
-                new StandardResponse(200,"Last Vehicle code! ", vehicleService.getLastId()),
+                new StandardResponse(200,"New Vehicle code! ", newId),
+                HttpStatus.OK
+        );
+    }
+
+    @GetMapping(path = "/driverid")
+    public ResponseEntity<StandardResponse> getDriverNewId(){
+        String lastId = driverService.getLastId();
+        String prefix = lastId.substring(0, 1); // Extract the prefix (e.g., "G")
+        int number = Integer.parseInt(lastId.substring(1)); // Extract the number (e.g., 0003)
+        number++; // Increment the number
+        String newId = String.format("%s%04d", prefix, number); // Create the new ID with zero-padding
+
+        return new ResponseEntity<>(
+                new StandardResponse(200,"New Driver code! ", newId),
                 HttpStatus.OK
         );
     }

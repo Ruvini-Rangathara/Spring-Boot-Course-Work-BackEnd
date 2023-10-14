@@ -64,8 +64,14 @@ public class HotelApi {
     }
 
     @GetMapping(path = "/id")
-    public ResponseEntity<StandardResponse> getLastId() {
-        return new ResponseEntity<>(new StandardResponse(200, "Last Hotel code! ", hotelService.getLastId()), HttpStatus.OK);
+    public ResponseEntity<StandardResponse> getNewId() {
+        String lastId = hotelService.getLastId(); // Get the last ID
+        String prefix = lastId.substring(0, 1); // Extract the prefix (e.g., "G")
+        int number = Integer.parseInt(lastId.substring(1)); // Extract the number (e.g., 0003)
+        number++; // Increment the number
+        String newId = String.format("%s%04d", prefix, number); // Create the new ID with zero-padding
+
+        return new ResponseEntity<>(new StandardResponse(200, "New Hotel code! ", newId), HttpStatus.OK);
     }
 
     private void validateHotelData(HotelDto hotelDto) throws RuntimeException {

@@ -54,8 +54,13 @@ public class DiscountApi {
     }
 
     @GetMapping(path = "/id")
-    public ResponseEntity<StandardResponse> getLastId() {
-        return new ResponseEntity<>(new StandardResponse(200, "Last Discount id! ", discountService.getLastId()), HttpStatus.OK);
+    public ResponseEntity<StandardResponse> getNewId() {
+        String lastId = discountService.getLastId();
+        int number = Integer.parseInt(lastId.substring(3));
+        number++;
+        String newId = String.format("DIS%04d", number);
+
+        return new ResponseEntity<>(new StandardResponse(200, "new Discount id! ", newId), HttpStatus.OK);
     }
 
     private void validateDiscountData(DiscountDto discountDto) throws RuntimeException {
