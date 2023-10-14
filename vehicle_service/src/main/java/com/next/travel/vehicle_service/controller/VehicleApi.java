@@ -18,12 +18,10 @@ import java.util.regex.Pattern;
 public class VehicleApi {
 
     private final VehicleService vehicleService;
-    private final DriverService driverService;
 
     @Autowired
-    public VehicleApi(VehicleService vehicleService, DriverService driverService) {
+    public VehicleApi(VehicleService vehicleService) {
         this.vehicleService = vehicleService;
-        this.driverService = driverService;
     }
 
 
@@ -75,7 +73,7 @@ public class VehicleApi {
         );
     }
 
-    @GetMapping(path = "/vehicleid")
+    @GetMapping(path = "/id")
     public ResponseEntity<StandardResponse> getVehicleNewId(){
         String lastId = vehicleService.getLastId(); // Get the last ID
         String prefix = lastId.substring(0, 1); // Extract the prefix (e.g., "G")
@@ -90,36 +88,14 @@ public class VehicleApi {
         );
     }
 
-    @GetMapping(path = "/driverid")
-    public ResponseEntity<StandardResponse> getDriverNewId(){
-        String lastId = driverService.getLastId();
-        String prefix = lastId.substring(0, 1); // Extract the prefix (e.g., "G")
-        int number = Integer.parseInt(lastId.substring(1)); // Extract the number (e.g., 0003)
-        number++; // Increment the number
-        String newId = String.format("%s%04d", prefix, number); // Create the new ID with zero-padding
-
-        return new ResponseEntity<>(
-                new StandardResponse(200,"New Driver code! ", newId),
-                HttpStatus.OK
-        );
-    }
 
 
     private void validateVehicleData(VehicleDto vehicleDto) throws RuntimeException {
         if (!Pattern.compile("^V\\d{3,}$").matcher(vehicleDto.getVehicleId()).matches()) {
             throw new InvalidException("Invalid id type!");
 
-        } else if (!Pattern.compile("^([a-zA-Z]+( [a-zA-Z]+)*)$").matcher(vehicleDto.getDriverDto().getName()).matches()) {
-            throw new InvalidException("Invalid name type!");
-
-        } else if (!(Pattern.compile("^D\\d{3,}$").matcher(String.valueOf(vehicleDto.getDriverDto().getDriverId())).matches())) {
-            throw new InvalidException("invalid id");
-
         } else if (!Pattern.compile("^[1-9]\\\\d*$").matcher(String.valueOf(vehicleDto.getSeatCapacity())).matches()) {
             throw new InvalidException("Invalid capacity!");
-
-        } else if (!Pattern.compile("^\\d{10}$").matcher(vehicleDto.getDriverDto().getContactNo()).matches()) {
-            throw new InvalidException("Invalid contact number!");
         }
     }
 
