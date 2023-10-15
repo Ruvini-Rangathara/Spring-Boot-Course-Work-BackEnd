@@ -11,4 +11,5 @@ public interface GuideService {
     GuideDto searchById(String id);
     List<GuideDto> getAll();
     String getLastId();
+
 }

@@ -2,6 +2,7 @@ package com.next.travel.package_service.service.impl;
 
 import com.next.travel.package_service.dto.PackageDto;
 import com.next.travel.package_service.entity.PackageEntity;
+import com.next.travel.package_service.exception.NotFoundException;
 import com.next.travel.package_service.repository.PackageRepo;
 import com.next.travel.package_service.service.PackageService;
 import com.next.travel.package_service.util.Convertor;
@@ -29,16 +30,19 @@ public class PackageServiceImpl implements PackageService {
 
     @Override
     public PackageDto update(PackageDto packageDto) {
+        if(!packageRepo.existsById(packageDto.getPackageId())) throw new NotFoundException("Not Found!");
         return convertor.getPackageDTO(packageRepo.update(convertor.getPackageEntity(packageDto)));
     }
 
     @Override
     public void delete(String id) {
+        if(!packageRepo.existsById(id)) throw new NotFoundException("Not Found!");
         packageRepo.deleteById(id);
     }
 
     @Override
     public PackageDto searchById(String id) {
+        if(!packageRepo.existsById(id)) throw new NotFoundException("Not Found!");
         return convertor.getPackageDTO(packageRepo.getPackageByPackageId(id));
     }
 
@@ -54,7 +58,8 @@ public class PackageServiceImpl implements PackageService {
 
     @Override
     public String getLastId() {
-        return packageRepo.findLastInsertedPackage();
+//        return packageRepo.findLastInsertedPackage();
 
+        return null;
     }
 }
