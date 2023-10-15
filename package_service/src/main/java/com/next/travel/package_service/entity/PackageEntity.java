@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -30,9 +31,11 @@ public class PackageEntity {
     private int noOfChildren;
     private int noOfAdults;
     private double paidValue;
-    private List<byte[]> paymentSlip;
+    private List<byte[]> paymentSlip = new ArrayList<>();
     private String remark;
 
     private String guideId;
     private String userId;
+    private List<String> vehicleId = new ArrayList<>();
+    private List<String> roomId = new ArrayList<>();
 }

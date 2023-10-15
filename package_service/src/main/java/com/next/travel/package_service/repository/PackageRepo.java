@@ -14,12 +14,10 @@ public interface PackageRepo extends CrudRepository<PackageEntity,String> {
 
     PackageEntity getPackageByPackageId(String id);
 
-    void deleteByPackageId(String id);
+    void deleteById(String id);
 
-    @Query(value = "{}", sort = "{packageId : -1}", fields = "{packageId : 1}")
-    List<PackageEntity> findLastInsertedPackage();
+    String findLastInsertedId();
 
-    @Query("{packageId : ?0}")
-    PackageEntity updatePackageEntityByPackageId(String id);
+    PackageEntity update(PackageEntity packageEntity);
 
 }

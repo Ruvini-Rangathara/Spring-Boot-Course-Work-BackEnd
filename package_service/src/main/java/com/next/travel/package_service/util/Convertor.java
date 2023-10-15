@@ -1,11 +1,7 @@
 package com.next.travel.package_service.util;
 
 import com.next.travel.package_service.dto.PackageDto;
-import com.next.travel.package_service.dto.PackageRoomDto;
-import com.next.travel.package_service.dto.PackageVehicleDto;
 import com.next.travel.package_service.entity.PackageEntity;
-import com.next.travel.package_service.entity.PackageRoomEntity;
-import com.next.travel.package_service.entity.PackageVehicleEntity;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
