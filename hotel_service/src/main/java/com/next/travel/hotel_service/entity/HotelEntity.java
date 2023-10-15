@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
@@ -28,13 +29,13 @@ public class HotelEntity implements Serializable {
     @ElementCollection
     @CollectionTable(name = "image_data", joinColumns = @JoinColumn(name = "entity_id"))
     @Column(name = "image", columnDefinition = "BLOB")
-    private List<Byte[]> imageList;
+    private List<Byte[]> imageList = new ArrayList<>();
 
     // Define the one-to-many relationship with DiscountEntity
     @OneToMany(mappedBy = "hotel") // "hotel" refers to the property name in DiscountEntity
-    private List<DiscountEntity> discounts;
+    private List<DiscountEntity> discounts = new ArrayList<>();
 
     // Define the one-to-many relationship with RoomEntity
     @OneToMany(mappedBy = "hotel") // "hotel" refers to the property name in RoomEntity
-    private List<RoomEntity> rooms;
+    private List<RoomEntity> rooms = new ArrayList<>();
 }

@@ -1,12 +1,11 @@
 package com.next.travel.hotel_service.dto;
 
-import com.next.travel.hotel_service.entity.DiscountEntity;
-import com.next.travel.hotel_service.entity.RoomEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
@@ -18,8 +17,8 @@ public class HotelDto implements Serializable {
     private String category;
     private String location;
     private String email;
-    private String[] contactNo;
+    private List<String> contactNo = new ArrayList<>();
     private String petsAllowedOrNot;
     private String cancellationCriteria;
-    private List<Byte[]> imageList;
+    private List<Byte[]> imageList = new ArrayList<>();
 }
