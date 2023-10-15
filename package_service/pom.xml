@@ -17,6 +17,14 @@
         <java.version>17</java.version>
     </properties>
     <dependencies>
+<!--        ======================   Web Client For Another endpoint   ======================-->
+        <!-- https://mvnrepository.com/artifact/org.springframework/spring-webflux -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webflux</artifactId>
+            <version>6.0.12</version>
+        </dependency>
+
         <!-- https://mvnrepository.com/artifact/org.modelmapper/modelmapper -->
         <dependency>
             <groupId>org.modelmapper</groupId>

@@ -58,8 +58,6 @@ public class PackageServiceImpl implements PackageService {
 
     @Override
     public String getLastId() {
-//        return packageRepo.findLastInsertedPackage();
-
-        return null;
+        return packageRepo.findLastInsertedId();
     }
 }

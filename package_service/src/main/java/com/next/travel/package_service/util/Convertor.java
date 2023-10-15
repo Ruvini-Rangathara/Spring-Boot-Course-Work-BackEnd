@@ -21,19 +21,5 @@ public class Convertor {
         return modelMapper.map(packageDto, PackageEntity.class);
     }
 
-    public PackageVehicleDto getPackageVehicleDTO(PackageVehicleEntity packageVehicleEntity){
-        return modelMapper.map(packageVehicleEntity, PackageVehicleDto.class);
-    }
-    public PackageVehicleEntity getPackageVehicleEntity(PackageVehicleDto packageVehicleDto){
-        return modelMapper.map(packageVehicleDto, PackageVehicleEntity.class);
-    }
-
-    public PackageRoomDto getPackageRoomDTO(PackageRoomEntity packageRoomEntity){
-        return modelMapper.map(packageRoomEntity, PackageRoomDto.class);
-    }
-    public PackageRoomEntity getPackageRoomEntity(PackageRoomDto packageRoomDto){
-        return modelMapper.map(packageRoomDto, PackageRoomEntity.class);
-    }
-
 
 }

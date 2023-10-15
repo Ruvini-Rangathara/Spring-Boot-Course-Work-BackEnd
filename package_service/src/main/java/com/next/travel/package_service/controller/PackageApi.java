@@ -7,8 +7,10 @@ import com.next.travel.package_service.util.StandardResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.regex.Pattern;
 
@@ -78,6 +80,12 @@ public class PackageApi {
 
         return new ResponseEntity<>(new StandardResponse(200, "new Package id! ", newId), HttpStatus.OK);
     }
+
+
+
+
+
+
 
     private void validatePackageData(PackageDto packageDto) throws RuntimeException {
         if (!Pattern.compile("^P\\d{3,}$").matcher(packageDto.getPackageId()).matches()) {
