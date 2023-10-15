@@ -9,8 +9,11 @@ import org.springframework.data.annotation.Id;
 @NoArgsConstructor
 @Data
 public class PackageRoomEntity {
+
     @Id
+    private long id;
+
     private String packageId;
-    @Id
+
     private String roomId;
 }

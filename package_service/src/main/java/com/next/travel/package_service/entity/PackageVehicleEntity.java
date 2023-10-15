@@ -10,10 +10,10 @@ import org.springframework.data.annotation.Id;
 @NoArgsConstructor
 @Data
 public class PackageVehicleEntity {
+    @Id
+    private long id;
 
-    @Id
     private String packageId;
-    @Id
     private String vehicleId;
 
 }
