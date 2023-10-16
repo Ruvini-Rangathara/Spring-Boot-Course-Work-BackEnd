@@ -16,8 +16,6 @@ public interface PackageRepo extends CrudRepository<PackageEntity,String> {
 
     void deleteById(String id);
 
-    String findLastInsertedId();
-
-    PackageEntity update(PackageEntity packageEntity);
+//    PackageEntity update(PackageEntity packageEntity);
 
 }

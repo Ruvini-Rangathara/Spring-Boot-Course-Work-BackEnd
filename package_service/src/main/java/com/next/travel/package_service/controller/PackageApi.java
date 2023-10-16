@@ -87,7 +87,7 @@ public class PackageApi {
         return new ResponseEntity<>(new StandardResponse(200, "new Package id! ", newId), HttpStatus.OK);
     }
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping (path = "/guide",produces = MediaType.APPLICATION_JSON_VALUE)
     GuideDto getFullProfileGuide(@RequestParam String guideId){
 
         //Method -1 - with RestTemplate(legacy)
@@ -103,7 +103,7 @@ public class PackageApi {
         return packageService.getFullProfileDataOfGuide(responseGuide.block());
     }
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/vehicle",produces = MediaType.APPLICATION_JSON_VALUE)
     List<VehicleDto> getFullProfileVehicle(@RequestParam List<String> vehicleIdList){
         List<VehicleDto> list = new ArrayList<>();
         for (String id : vehicleIdList) {
@@ -116,7 +116,7 @@ public class PackageApi {
         return list;
     }
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/rooms",produces = MediaType.APPLICATION_JSON_VALUE)
     List<RoomDto> getFullProfileRooms(@RequestParam List<String> roomIdList){
         List<RoomDto> list = new ArrayList<>();
         for (String id : roomIdList) {

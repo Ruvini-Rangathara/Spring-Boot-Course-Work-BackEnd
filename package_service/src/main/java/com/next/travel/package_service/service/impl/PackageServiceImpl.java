@@ -30,19 +30,21 @@ public class PackageServiceImpl implements PackageService {
 
     @Override
     public PackageDto update(PackageDto packageDto) {
-        if(!packageRepo.existsById(packageDto.getPackageId())) throw new NotFoundException("Not Found!");
-        return convertor.getPackageDTO(packageRepo.update(convertor.getPackageEntity(packageDto)));
+        if (!packageRepo.existsById(packageDto.getPackageId())) throw new NotFoundException("Not Found!");
+
+//        return convertor.getPackageDTO(packageRepo.update(convertor.getPackageEntity(packageDto)));
+        return null;
     }
 
     @Override
     public void delete(String id) {
-        if(!packageRepo.existsById(id)) throw new NotFoundException("Not Found!");
+        if (!packageRepo.existsById(id)) throw new NotFoundException("Not Found!");
         packageRepo.deleteById(id);
     }
 
     @Override
     public PackageDto searchById(String id) {
-        if(!packageRepo.existsById(id)) throw new NotFoundException("Not Found!");
+        if (!packageRepo.existsById(id)) throw new NotFoundException("Not Found!");
         return convertor.getPackageDTO(packageRepo.getPackageByPackageId(id));
     }
 
@@ -50,7 +52,7 @@ public class PackageServiceImpl implements PackageService {
     public List<PackageDto> getAll() {
         Iterable<PackageEntity> all = packageRepo.findAll();
         List<PackageDto> list = new ArrayList<>();
-        for (PackageEntity entity: all) {
+        for (PackageEntity entity : all) {
             list.add(convertor.getPackageDTO(entity));
         }
         return list;
@@ -58,7 +60,7 @@ public class PackageServiceImpl implements PackageService {
 
     @Override
     public String getLastId() {
-        return packageRepo.findLastInsertedId();
+        return null;
     }
 
     @Override
