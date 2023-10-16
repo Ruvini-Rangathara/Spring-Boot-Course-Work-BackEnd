@@ -1,8 +1,6 @@
 package com.next.travel.package_service.service;
 
-import com.next.travel.package_service.dto.GuideDto;
-import com.next.travel.package_service.dto.PackageDto;
-import com.next.travel.package_service.dto.VehicleDto;
+import com.next.travel.package_service.dto.*;
 
 import java.util.List;
 
@@ -17,4 +15,8 @@ public interface PackageService {
     GuideDto getFullProfileDataOfGuide(GuideDto guideDto);
 
     VehicleDto getFullProfileDataOfVehicle(VehicleDto vehicleDto);
+
+    HotelDto getFullProfileDataOfHotel(HotelDto hotelDto);
+
+    RoomDto getFullProfileDataOfRoom(RoomDto roomDto);
 }

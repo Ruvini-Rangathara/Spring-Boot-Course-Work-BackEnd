@@ -1,8 +1,6 @@
 package com.next.travel.package_service.service.impl;
 
-import com.next.travel.package_service.dto.GuideDto;
-import com.next.travel.package_service.dto.PackageDto;
-import com.next.travel.package_service.dto.VehicleDto;
+import com.next.travel.package_service.dto.*;
 import com.next.travel.package_service.entity.PackageEntity;
 import com.next.travel.package_service.exception.NotFoundException;
 import com.next.travel.package_service.repository.PackageRepo;
@@ -74,5 +72,15 @@ public class PackageServiceImpl implements PackageService {
     @Override
     public VehicleDto getFullProfileDataOfVehicle(VehicleDto vehicleDto) {
         return vehicleDto;
+    }
+
+    @Override
+    public HotelDto getFullProfileDataOfHotel(HotelDto hotelDto) {
+        return hotelDto;
+    }
+
+    @Override
+    public RoomDto getFullProfileDataOfRoom(RoomDto roomDto) {
+        return roomDto;
     }
 }

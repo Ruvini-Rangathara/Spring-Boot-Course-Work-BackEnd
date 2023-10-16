@@ -1,8 +1,6 @@
 package com.next.travel.package_service.controller;
 
-import com.next.travel.package_service.dto.GuideDto;
-import com.next.travel.package_service.dto.PackageDto;
-import com.next.travel.package_service.dto.VehicleDto;
+import com.next.travel.package_service.dto.*;
 import com.next.travel.package_service.exception.InvalidException;
 import com.next.travel.package_service.service.PackageService;
 import com.next.travel.package_service.util.StandardResponse;
@@ -15,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 
@@ -34,6 +34,9 @@ public class PackageApi {
 
     @Value("${user-service-endpoint}")
     private String userDataEndpoint;
+
+    @Value("${room-service-endpoint}")
+    private String roomDataEndpoint;
 
     private final PackageService packageService;
 
@@ -109,7 +112,18 @@ public class PackageApi {
         return packageService.getFullProfileDataOfVehicle(responseVehicle.block());
     }
 
-
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    List<RoomDto> getFullProfileRooms(@RequestParam List<String> roomIdList){
+        List<RoomDto> list = new ArrayList<>();
+        for (String id : roomIdList) {
+            WebClient webClient = WebClient.create(roomDataEndpoint + id);
+            Mono<RoomDto> responseRoom  = webClient.get()
+                    .retrieve() // fetch the data
+                    .bodyToMono(RoomDto.class);
+            list.add(packageService.getFullProfileDataOfRoom(responseRoom.block()));
+        }
+        return list;
+    }
 
 
     private void validatePackageData(PackageDto packageDto) throws RuntimeException {
