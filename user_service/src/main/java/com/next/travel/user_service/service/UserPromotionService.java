@@ -7,8 +7,8 @@ import java.util.List;
 public interface UserPromotionService {
     UserPromotionDto save(UserPromotionDto userPromotionDto);
     UserPromotionDto update(UserPromotionDto userPromotionDto);
-    void delete(String id);
-    UserPromotionDto searchById(String id);
+    void delete(int id);
+    UserPromotionDto searchById(int id);
     List<UserPromotionDto> getAll();
     Integer getLastId();
 }

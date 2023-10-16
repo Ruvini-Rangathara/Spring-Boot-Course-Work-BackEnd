@@ -33,7 +33,7 @@ public class UserPromotionServiceImpl implements UserPromotionService {
     }
 
     @Override
-    public void delete(String id) {
+    public void delete(int id) {
         if(!userPromotionRepo.existsById(id)) throw new NotFoundException("User-Promotion Not Found!");
 
         UserPromotionEntity userPromotionEntity= userPromotionRepo.getReferenceById(id);
@@ -41,7 +41,7 @@ public class UserPromotionServiceImpl implements UserPromotionService {
     }
 
     @Override
-    public UserPromotionDto searchById(String id) {
+    public UserPromotionDto searchById(int id) {
         if(!userPromotionRepo.existsById(id)) throw new NotFoundException("User-Promotion Not Found!");
         return convertor.getUserPromotionDto(userPromotionRepo.getReferenceById(id));
 
