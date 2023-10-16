@@ -104,12 +104,16 @@ public class PackageApi {
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    VehicleDto getFullProfileVehicle(@RequestParam String vehicleId){
-        WebClient webClient = WebClient.create(vehicleDataEndpoint + vehicleId);
-        Mono<VehicleDto> responseVehicle  = webClient.get()
-                .retrieve() // fetch the data
-                .bodyToMono(VehicleDto.class);
-        return packageService.getFullProfileDataOfVehicle(responseVehicle.block());
+    List<VehicleDto> getFullProfileVehicle(@RequestParam List<String> vehicleIdList){
+        List<VehicleDto> list = new ArrayList<>();
+        for (String id : vehicleIdList) {
+            WebClient webClient = WebClient.create(vehicleDataEndpoint + id);
+            Mono<VehicleDto> responseVehicle  = webClient.get()
+                    .retrieve() // fetch the data
+                    .bodyToMono(VehicleDto.class);
+            list.add(packageService.getFullProfileDataOfVehicle(responseVehicle.block()));
+        }
+        return list;
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
