@@ -32,6 +32,8 @@ public class PackageEntity {
     private int noOfAdults;
     private double paidValue;
     private List<byte[]> paymentSlip = new ArrayList<>();
+    private double insuranceValue;
+    private String claimedOrNot;
     private String remark;
 
     private String guideId;
