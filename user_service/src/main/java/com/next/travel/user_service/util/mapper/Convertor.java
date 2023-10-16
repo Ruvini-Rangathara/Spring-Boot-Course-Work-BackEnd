@@ -40,7 +40,7 @@ public class Convertor {
 
 
 
-    public UserPromotionDto getUserDto(UserPromotionEntity userPromotionEntity){
+    public UserPromotionDto getUserPromotionDto(UserPromotionEntity userPromotionEntity){
         return modelMapper.map(userPromotionEntity, UserPromotionDto.class);
     }
 
