@@ -1,5 +1,6 @@
 package com.next.travel.package_service.service.impl;
 
+import com.next.travel.package_service.dto.GuideDto;
 import com.next.travel.package_service.dto.PackageDto;
 import com.next.travel.package_service.entity.PackageEntity;
 import com.next.travel.package_service.exception.NotFoundException;
@@ -59,5 +60,13 @@ public class PackageServiceImpl implements PackageService {
     @Override
     public String getLastId() {
         return packageRepo.findLastInsertedId();
+    }
+
+    @Override
+    public GuideDto getFullProfileDataOfGuide(GuideDto modifiedGuide) {
+//        GuideDto guideDto1 = packageRepo.findById(guideDto.getGuideId());
+//        guideDto1.setGuideId(guideDto.getGuideId());
+//        modifiedGuide.setOrderValue(orderData.getOrderValue());
+        return modifiedGuide;
     }
 }

@@ -1,5 +1,6 @@
 package com.next.travel.package_service.controller;
 
+import com.next.travel.package_service.dto.GuideDto;
 import com.next.travel.package_service.dto.PackageDto;
 import com.next.travel.package_service.exception.InvalidException;
 import com.next.travel.package_service.service.PackageService;
@@ -11,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import java.util.regex.Pattern;
 
@@ -81,7 +83,21 @@ public class PackageApi {
         return new ResponseEntity<>(new StandardResponse(200, "new Package id! ", newId), HttpStatus.OK);
     }
 
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    GuideDto getFullProfileGuide(@RequestParam String guideId){
 
+        //Method -1 - with RestTemplate(legacy)
+//        RestTemplate restTemplate = new RestTemplate();
+//        CustomerOrder initialCustomer = restTemplate.getForObject(customerDataEndpoint + customerId, CustomerOrder.class);
+//        return orderService.getFullProfileData(initialCustomer);
+
+        //Method -2 - with WebClient(modern)
+        WebClient webClient = WebClient.create(guideDataEndpoint + guideId);
+        Mono<GuideDto> responseGuide  = webClient.get()
+                .retrieve() // fetch the data
+                .bodyToMono(GuideDto.class);
+        return packageService.getFullProfileDataOfGuide(responseGuide.block());
+    }
 
 
 

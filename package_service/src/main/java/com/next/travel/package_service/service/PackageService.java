@@ -1,5 +1,6 @@
 package com.next.travel.package_service.service;
 
+import com.next.travel.package_service.dto.GuideDto;
 import com.next.travel.package_service.dto.PackageDto;
 
 import java.util.List;
@@ -12,4 +13,5 @@ public interface PackageService {
     List<PackageDto> getAll();
     String getLastId();
 
+    GuideDto getFullProfileDataOfGuide(GuideDto guideDto);
 }
