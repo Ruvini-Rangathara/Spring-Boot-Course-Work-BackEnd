@@ -57,17 +57,6 @@ public class UserApi {
         return new ResponseEntity<>(new StandardResponse(200, "User Data List! ", userService.getAll()), HttpStatus.OK);
     }
 
-    @GetMapping(path = "/id")
-    public ResponseEntity<StandardResponse> getNewId() {
-        String lastId = userService.getLastId(); // Get the last ID
-        String prefix = lastId.substring(0, 1); // Extract the prefix (e.g., "G")
-        int number = Integer.parseInt(lastId.substring(1)); // Extract the number (e.g., 0003)
-        number++; // Increment the number
-        String newId = String.format("%s%04d", prefix, number); // Create the new ID with zero-padding
-
-        return new ResponseEntity<>(new StandardResponse(200, "New User Id! ", newId), HttpStatus.OK);
-    }
-
     private void validateUserData(UserDto userDto) throws RuntimeException {
         if (!Pattern.compile("^(?=.*\\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$").matcher(userDto.getPassword()).matches()) {
             throw new InvalidException("Invalid password!");
