@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Entity
+@Entity(name = "promotion")
 public class PromotionEntity {
     @Id
     private String promotionId;
