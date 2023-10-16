@@ -2,6 +2,7 @@ package com.next.travel.package_service.controller;
 
 import com.next.travel.package_service.dto.GuideDto;
 import com.next.travel.package_service.dto.PackageDto;
+import com.next.travel.package_service.dto.VehicleDto;
 import com.next.travel.package_service.exception.InvalidException;
 import com.next.travel.package_service.service.PackageService;
 import com.next.travel.package_service.util.StandardResponse;
@@ -99,6 +100,14 @@ public class PackageApi {
         return packageService.getFullProfileDataOfGuide(responseGuide.block());
     }
 
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    VehicleDto getFullProfileVehicle(@RequestParam String vehicleId){
+        WebClient webClient = WebClient.create(vehicleDataEndpoint + vehicleId);
+        Mono<VehicleDto> responseVehicle  = webClient.get()
+                .retrieve() // fetch the data
+                .bodyToMono(VehicleDto.class);
+        return packageService.getFullProfileDataOfVehicle(responseVehicle.block());
+    }
 
 
 
