@@ -8,27 +8,22 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Entity
-public class UserEntity {
+public class PromotionEntity {
     @Id
-    private String username;
-    private String password;
-    private String email;
-    private String gender;
-    private int age;
-    private String address;
-    private String contactNo;
-    private String nicOrPassportNo;
-    private byte[] nicOrPassportFront;
-    private byte[] nicOrPassportBack;
-    private String remark;
+    private String promotionId;
+    private double lowerRange;
+    private double upperRange;
+    private double rate;
+    private Date exDate;
+    private String availability;
 
-
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "promotion")
     private List<UserPromotionEntity> userPromotions = new ArrayList<>();
 }
