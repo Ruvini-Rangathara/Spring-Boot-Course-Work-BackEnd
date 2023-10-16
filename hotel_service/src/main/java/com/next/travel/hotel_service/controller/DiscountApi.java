@@ -70,6 +70,12 @@ public class DiscountApi {
         } else if (!Pattern.compile("^\\d+(\\.\\d+)?$\n").matcher(String.valueOf(discountDto.getRate())).matches()) {
             throw new InvalidException("Invalid rate!");
         }
+        else if (!Pattern.compile("^\\d+\\.\\d{2}$\n").matcher(String.valueOf(discountDto.getRate())).matches()) {
+            throw new InvalidException("Invalid Lower Range!");
+        }
+        else if (!Pattern.compile("^\\d+\\.\\d{2}$\n").matcher(String.valueOf(discountDto.getRate())).matches()) {
+            throw new InvalidException("Invalid Upper Range!");
+        }
     }
 
 }
