@@ -1,6 +1,5 @@
 package com.next.travel.package_service.repository;
 
-import com.next.travel.package_service.dto.InsuranceDto;
 import com.next.travel.package_service.entity.InsuranceEntity;
 import org.springframework.data.repository.CrudRepository;
 
