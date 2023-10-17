@@ -7,19 +7,26 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="vehicle_service" />
-        <module name="guide_service" />
         <module name="user_service" />
         <module name="hotel_service" />
+        <module name="test" />
         <module name="package_service" />
+        <module name="vehicle_service" />
+        <module name="guide_service" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="api_gateway" target="17" />
+      <module name="test" target="17" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="api_gateway" options="-parameters" />
       <module name="guide_service" options="-parameters" />
       <module name="hotel_service" options="-parameters" />
       <module name="package_service" options="-parameters" />
+      <module name="test" options="-parameters" />
       <module name="user_service" options="-parameters" />
       <module name="vehicle_service" options="-parameters" />
     </option>

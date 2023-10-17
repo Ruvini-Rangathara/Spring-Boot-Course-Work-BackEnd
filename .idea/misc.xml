@@ -12,7 +12,17 @@
         <option value="$PROJECT_DIR$/hotel_service/pom.xml" />
         <option value="$PROJECT_DIR$/package_service/pom.xml" />
         <option value="$PROJECT_DIR$/user_service/pom.xml" />
+        <option value="$PROJECT_DIR$/api_gateway/pom.xml" />
+        <option value="$PROJECT_DIR$/test/pom.xml" />
+        <option value="$PROJECT_DIR$/gateway/pom.xml" />
       </list>
+    </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/api_gateway/pom.xml" />
+        <option value="$PROJECT_DIR$/gateway/pom.xml" />
+        <option value="$PROJECT_DIR$/test/pom.xml" />
+      </set>
     </option>
   </component>
   <component name="ProjectRootManager">

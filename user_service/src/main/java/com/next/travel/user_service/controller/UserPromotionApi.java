@@ -1,9 +1,6 @@
 package com.next.travel.user_service.controller;
 
-
-import com.next.travel.user_service.dto.PromotionDto;
 import com.next.travel.user_service.dto.UserPromotionDto;
-import com.next.travel.user_service.service.PromotionService;
 import com.next.travel.user_service.service.UserPromotionService;
 import com.next.travel.user_service.util.StandardResponse;
 import org.springframework.beans.factory.annotation.Autowired;
