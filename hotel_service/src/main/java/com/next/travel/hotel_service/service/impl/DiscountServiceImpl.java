@@ -1,9 +1,7 @@
 package com.next.travel.hotel_service.service.impl;
 
 import com.next.travel.hotel_service.dto.DiscountDto;
-import com.next.travel.hotel_service.dto.RoomDto;
 import com.next.travel.hotel_service.entity.DiscountEntity;
-import com.next.travel.hotel_service.entity.RoomEntity;
 import com.next.travel.hotel_service.exception.NotFoundException;
 import com.next.travel.hotel_service.repository.DiscountRepo;
 import com.next.travel.hotel_service.service.DiscountService;

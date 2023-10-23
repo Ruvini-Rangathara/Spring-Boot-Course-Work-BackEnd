@@ -13,15 +13,12 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Entity(name = "room")
-public class RoomEntity implements Serializable {
+@Entity(name = "option")
+public class OptionEntity implements Serializable {
     @Id
-    private String roomId;
-    private String category;
-    private int capacity;
+    private String optionId;
+    private int optionNumber;
     private double price;
-    private String availability;
-
     // Define the many-to-one relationship with HotelEntity
     @ManyToOne
     private HotelEntity hotel;

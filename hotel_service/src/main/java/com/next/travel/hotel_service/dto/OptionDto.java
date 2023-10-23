@@ -9,11 +9,9 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class RoomDto implements Serializable {
-    private String roomId;
-    private String category;
-    private int capacity;
+public class OptionDto implements Serializable {
+    private String optionId;
+    private int optionNumber;
     private double price;
-    private String availability;
     private HotelDto hotel;
 }

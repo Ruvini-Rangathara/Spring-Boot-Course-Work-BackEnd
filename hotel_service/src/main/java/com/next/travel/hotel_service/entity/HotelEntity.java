@@ -37,5 +37,5 @@ public class HotelEntity implements Serializable {
 
     // Define the one-to-many relationship with RoomEntity
     @OneToMany(mappedBy = "hotel") // "hotel" refers to the property name in RoomEntity
-    private List<RoomEntity> rooms = new ArrayList<>();
+    private List<OptionEntity> rooms = new ArrayList<>();
 }

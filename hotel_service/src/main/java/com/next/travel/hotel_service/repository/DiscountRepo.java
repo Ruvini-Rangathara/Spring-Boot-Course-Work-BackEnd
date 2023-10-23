@@ -1,7 +1,6 @@
 package com.next.travel.hotel_service.repository;
 
 import com.next.travel.hotel_service.entity.DiscountEntity;
-import com.next.travel.hotel_service.entity.RoomEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

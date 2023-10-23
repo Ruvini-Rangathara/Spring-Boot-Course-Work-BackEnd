@@ -1,7 +1,7 @@
 package com.next.travel.hotel_service.controller;
 
 import com.next.travel.hotel_service.dto.HotelDto;
-import com.next.travel.hotel_service.dto.RoomDto;
+import com.next.travel.hotel_service.dto.OptionDto;
 import com.next.travel.hotel_service.exception.InvalidException;
 import com.next.travel.hotel_service.service.HotelService;
 import com.next.travel.hotel_service.util.StandardResponse;
@@ -55,12 +55,6 @@ public class HotelApi {
     @GetMapping(path = "/list")
     public ResponseEntity<StandardResponse> findAllHotel() {
         return new ResponseEntity<>(new StandardResponse(200, "Hotel Data List! ", hotelService.getAll()), HttpStatus.OK);
-    }
-
-    @GetMapping(path = "/rooms")
-    public ResponseEntity<StandardResponse> findRoomByHotelCodeAndCategory(@RequestParam String hotelCode, @RequestParam String category) {
-        List<RoomDto> roomsByHotelCodeAndCategory = hotelService.getRoomsByHotelCodeAndCategory(hotelCode, category);
-        return new ResponseEntity<>(new StandardResponse(200, "Room Data List by hotel code and category! ", roomsByHotelCodeAndCategory), HttpStatus.OK);
     }
 
     @GetMapping(path = "/id")

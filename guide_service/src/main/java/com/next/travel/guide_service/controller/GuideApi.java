@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping("/api/v1/guide")
+@CrossOrigin(origins = "http://localhost:63342")
 public class GuideApi {
 
     private final GuideService guideService;
@@ -26,6 +27,7 @@ public class GuideApi {
 
     @PostMapping
     public ResponseEntity<StandardResponse> addGuide(@RequestBody GuideDto guideDto) {
+        System.out.println(guideDto.getGuideId());
         validateGuideData(guideDto);
         guideService.save(guideDto);
         return new ResponseEntity<>(new StandardResponse(201, "Guide was saved!", guideDto.toString()), HttpStatus.CREATED);

@@ -3,10 +3,10 @@ package com.next.travel.hotel_service.util.mapper;
 
 import com.next.travel.hotel_service.dto.DiscountDto;
 import com.next.travel.hotel_service.dto.HotelDto;
-import com.next.travel.hotel_service.dto.RoomDto;
+import com.next.travel.hotel_service.dto.OptionDto;
 import com.next.travel.hotel_service.entity.DiscountEntity;
 import com.next.travel.hotel_service.entity.HotelEntity;
-import com.next.travel.hotel_service.entity.RoomEntity;
+import com.next.travel.hotel_service.entity.OptionEntity;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -29,12 +29,12 @@ public class Convertor {
         return modelMapper.map(hotelDto, HotelEntity.class);
     }
 
-    public RoomDto getRoomDto(RoomEntity roomEntity){
-        return modelMapper.map(roomEntity, RoomDto.class);
+    public OptionDto getOptionDto(OptionEntity optionEntity){
+        return modelMapper.map(optionEntity, OptionDto.class);
     }
 
-    public RoomEntity getRoomEntity(RoomDto roomDto){
-        return modelMapper.map(roomDto, RoomEntity.class);
+    public OptionEntity getOptionEntity(OptionDto optionDto){
+        return modelMapper.map(optionDto, OptionEntity.class);
     }
 
 
