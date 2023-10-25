@@ -7,14 +7,16 @@ import com.next.travel.guide_service.util.StandardResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping("/api/v1/guide")
-@CrossOrigin(origins = "http://localhost:63342")
+@CrossOrigin(origins = "*")
 public class GuideApi {
 
     private final GuideService guideService;
@@ -25,84 +27,117 @@ public class GuideApi {
     }
 
 
-    @PostMapping
-    public ResponseEntity<StandardResponse> addGuide(@RequestBody GuideDto guideDto) {
-        System.out.println(guideDto.getGuideId());
-        validateGuideData(guideDto);
-        guideService.save(guideDto);
-        return new ResponseEntity<>(new StandardResponse(201, "Guide was saved!", guideDto.toString()), HttpStatus.CREATED);
+    @PostMapping(value = "/save", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> save(@RequestPart("nic_front") byte[] nic_front, @RequestPart("nic_back") byte[] nic_back, @RequestPart("guide_id_front") byte[] guide_id_front, @RequestPart("guide_id_back") byte[] guide_id_back, @RequestPart("profile") byte[] guide_img, @RequestPart("guide") GuideDto guide) {
 
-        //http://localhost:8000/api/v1/doctors -> POST
+        System.out.println("GuideController -> " + guide);
 
-        // Body -> raw
-        // {
-        //    "name": "ruvini",
-        //    "address": "panadura",
-        //    "contact":"0786628489",
-        //    "salary":60000
-        //}
-    }
+        guide.setPhoto(guide_img);
+        guide.setNicFrontImage(nic_front);
+        guide.setNicBackImage(nic_back);
+        guide.setGuidIdFrontImage(guide_id_front);
+        guide.setGuideIdBackImage(guide_id_back);
+        System.out.println("GuideController -> " + guide);
+        try {
+            validateGuideDetails(guide);
+            System.out.println("validated");
+            if (guideService.existById(guide.getGuideId())) {
 
-    @GetMapping("/{id}")
-    public ResponseEntity<StandardResponse> findGuide(@PathVariable String id) {
-        GuideDto guideDto = guideService.searchById(id);
-        return new ResponseEntity<>(new StandardResponse(200, "Guide was found!", guideService.searchById(id)), HttpStatus.OK);
-
-        //http://localhost:8000/api/v1/doctors/D0001            -> GET
-    }
-
-    @PutMapping
-    public ResponseEntity<StandardResponse> updateGuide(@RequestParam String id, @RequestBody GuideDto guideDto) {
-        validateGuideData(guideDto);
-        guideService.update(guideDto);
-        return new ResponseEntity<>(new StandardResponse(201, "Updated Guide Data!", guideDto.toString()), HttpStatus.OK);
+                System.out.println("exists");
+                return ResponseEntity.badRequest().body("Guide already exists!");
+            }
+            guideService.save(guide);
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
 
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<StandardResponse> deleteGuide(@PathVariable String id) {
-        guideService.delete(id);
-        return new ResponseEntity<>(new StandardResponse(204, "Deleted Guide Data!", id), HttpStatus.NO_CONTENT);
+    private void validateGuideDetails(GuideDto guide) {
+        if (!Pattern.compile("^G\\d{3,}$").matcher(guide.getGuideId()).matches())
+            throw new RuntimeException("Invalid driver id");
+        if (!Pattern.compile("^[a-zA-Z '-]+$").matcher(guide.getName()).matches())
+            throw new RuntimeException("Invalid driver name");
+        if (!Pattern.compile("^\\d{10}$").matcher(guide.getContactNo()).matches())
+            throw new RuntimeException("Invalid driver contact number");
+        if (!Pattern.compile("^(Male|Female)$").matcher(guide.getGender()).matches())
+            throw new RuntimeException("Invalid gender type");
+        if (!Pattern.compile("^[a-zA-Z0-9\\s]+$").matcher(guide.getAddress()).matches())
+            throw new RuntimeException("Invalid address");
+        try {
+            if (!Pattern.compile("^\\d+$").matcher(String.valueOf(guide.getAge())).matches())
+                throw new RuntimeException("Invalid seat capacity!");
+            if (!Pattern.compile("^\\d+(\\.\\d+)?$").matcher(String.valueOf(guide.getManDayValue())).matches())
+                throw new RuntimeException("invalid price per day!");
+        } catch (NumberFormatException e) {
+            throw new RuntimeException("invalid price per day!");
+        }
 
-        //http://localhost:8000/api/v1/doctors/D0001            -> DELETE
+        if (guide.getPhoto() == null || guide.getNicFrontImage() == null || guide.getNicBackImage() == null || guide.getGuidIdFrontImage() == null || guide.getGuideIdBackImage() == null)
+            throw new RuntimeException("Invalid or empty image found in the list.");
+
+
     }
 
-    @GetMapping(path = "/list")
-    public ResponseEntity<StandardResponse> findAllGuide() {
-        return new ResponseEntity<>(new StandardResponse(200, "Guide Data List! ", guideService.getAll()), HttpStatus.OK);
+    @GetMapping("/get/lastId")
+    public ResponseEntity<?> getOngoingGuideID() {
+        System.out.println("get last id");
+        String guideId = guideService.getLastId();
+        return ResponseEntity.ok(guideId);
     }
 
-    @GetMapping(path = "/id")
-    public ResponseEntity<StandardResponse> getNewId() {
+    @GetMapping("/getAll")
+    public ResponseEntity<?> getAll() {
+        System.out.println("Guide Controller -> getAll");
+        List<GuideDto> allGuides = guideService.getAll();
+        System.out.println(allGuides.size());
+        if (allGuides.isEmpty()) return ResponseEntity.ok().body("");
+        System.out.println("done");
+        return ResponseEntity.ok().body(allGuides);
 
-        String lastId = guideService.getLastId(); // Get the last ID
-        String prefix = lastId.substring(0, 1); // Extract the prefix (e.g., "G")
-        int number = Integer.parseInt(lastId.substring(1)); // Extract the number (e.g., 0003)
-        number++; // Increment the number
-        String newId = String.format("%s%04d", prefix, number); // Create the new ID with zero-padding
-
-        return new ResponseEntity<>(new StandardResponse(200, "New Guide id! ", newId), HttpStatus.OK);
     }
 
-    private void validateGuideData(GuideDto guideDto) throws RuntimeException {
-        if (!Pattern.compile("^G\\d{3,}$").matcher(guideDto.getGuideId()).matches()) {
-            throw new InvalidException("Invalid id type!");
-
-        } else if (!Pattern.compile("^([a-zA-Z]+( [a-zA-Z]+)*)$").matcher(guideDto.getName()).matches()) {
-            throw new InvalidException("Invalid name type!");
-
-        } else if (!(Pattern.compile("^\\d+$").matcher(String.valueOf(guideDto.getAge())).matches() && guideDto.getAge() > 0 && guideDto.getAge() <100)) {
-            throw new InvalidException("invalid age");
-
-        } else if (!(guideDto.getGender().equalsIgnoreCase("male") || guideDto.getGender().equalsIgnoreCase("female"))) {
-            throw new InvalidException("invalid gender");
-
-        } else if (!Pattern.compile("^\\d{10}$").matcher(guideDto.getContactNo()).matches()) {
-            throw new InvalidException("Invalid contact number!");
-
-        } else if (!Pattern.compile("^(Rs\\s)?\\d+(\\.\\d{1,2})?$").matcher(String.valueOf(guideDto.getManDayValue())).matches()) {
-            throw new InvalidException("Invalid price in Sri Lankan Rupees!");
+    @PatchMapping(value = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> patch(@RequestPart("nic_front") byte[] nic_front, @RequestPart("nic_back") byte[] nic_back, @RequestPart("guide_id_front") byte[] guide_id_front, @RequestPart("guide_id_back") byte[] guide_id_back, @RequestPart("profile") byte[] guide_img, @RequestPart("guide") GuideDto guide) {
+        guide.setPhoto(guide_img);
+        guide.setNicFrontImage(nic_front);
+        guide.setNicBackImage(nic_back);
+        guide.setGuidIdFrontImage(guide_id_front);
+        guide.setGuideIdBackImage(guide_id_back);
+        try {
+            validateGuideDetails(guide);
+            System.out.println("validated");
+            if (guideService.existById(guide.getGuideId())) {
+                guideService.save(guide);
+                return ResponseEntity.ok().build();
+            }
+            return ResponseEntity.badRequest().body("Guide not found");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteGuide(@RequestHeader("id") String id) {
+        System.out.println("GuideController -> deleteGuide");
+        if (!Pattern.compile("^G\\d{3,}$").matcher(id).matches())
+            return ResponseEntity.badRequest().body("Invalid guide id");
+        try {
+            guideService.delete(id);
+            return ResponseEntity.ok().body("Guide deleted successfully!");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/get")
+    public ResponseEntity<?> getGuideById(@RequestHeader String id) {
+        System.out.println("VehicleController -> getVehicleByVehicleID: " + id);
+        boolean isExists = guideService.existById(id);
+        if (!isExists) return ResponseEntity.badRequest().body("Guide not found !");
+        GuideDto guide = guideService.searchById(id);
+        return ResponseEntity.ok(guide);
+    }
 }

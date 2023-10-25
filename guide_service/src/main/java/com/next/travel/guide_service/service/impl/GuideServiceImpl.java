@@ -61,4 +61,9 @@ public class GuideServiceImpl implements GuideService {
     public String getLastId() {
         return guideRepo.getLastId();
     }
+
+    @Override
+    public boolean existById(String id) {
+        return existById(id);
+    }
 }

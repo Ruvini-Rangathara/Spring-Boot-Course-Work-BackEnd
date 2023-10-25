@@ -5,6 +5,7 @@ import com.next.travel.vehicle_service.exception.InvalidException;
 import com.next.travel.vehicle_service.service.DriverService;
 import com.next.travel.vehicle_service.service.VehicleService;
 import com.next.travel.vehicle_service.util.StandardResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,6 +17,7 @@ import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping("/api/v1/driver")
+@CrossOrigin(origins = "*")
 public class DriverApi {
 
     private final DriverService driverService;
