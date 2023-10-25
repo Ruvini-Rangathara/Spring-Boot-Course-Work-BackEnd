@@ -32,24 +32,23 @@ public class VehicleServiceImpl implements VehicleService {
 
     @Override
     public VehicleDto save(VehicleDto vehicleDto) {
-        driverService.save(vehicleDto.getDriverDto());
         return convertor.getVehicleDto(vehicleRepo.save(convertor.getVehicleEntity(vehicleDto)));
     }
 
     @Override
     public VehicleDto update(VehicleDto vehicleDto) {
-        driverService.save(vehicleDto.getDriverDto());
         return convertor.getVehicleDto(vehicleRepo.save(convertor.getVehicleEntity(vehicleDto)));
     }
 
     @Override
-    public void delete(String id) {
+    public boolean delete(String id) {
         if(!vehicleRepo.existsById(id)) throw new NotFoundException("Vehicle Not Found!");
 
         VehicleEntity vehicleEntity= vehicleRepo.getReferenceById(id);
 
         driverService.delete(vehicleEntity.getDriver().getDriverId());
         vehicleRepo.delete(vehicleEntity);
+        return true;
     }
 
     @Override
@@ -71,5 +70,10 @@ public class VehicleServiceImpl implements VehicleService {
     @Override
     public String getLastId() {
         return vehicleRepo.getLastId();
+    }
+
+    @Override
+    public boolean existById(String id) {
+        return vehicleRepo.existsById(id);
     }
 }

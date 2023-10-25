@@ -24,6 +24,7 @@ public class VehicleEntity {
     private String transmissionType;  //auto or manual
     private String availability;
     private String remark;
+    private double pricePerDay;
 
     @ElementCollection
     @CollectionTable(name = "image_data", joinColumns = @JoinColumn(name = "entity_id"))

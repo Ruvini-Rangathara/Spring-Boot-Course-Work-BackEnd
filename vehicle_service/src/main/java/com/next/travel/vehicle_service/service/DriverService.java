@@ -7,9 +7,10 @@ import java.util.List;
 public interface DriverService {
     DriverDto save(DriverDto driverDto);
     DriverDto update(DriverDto driverDto);
-    void delete(String id);
+    boolean delete(String id);
     DriverDto searchById(String id);
     List<DriverDto> getAll();
     String getLastId();
+    boolean existById(String id);
 
 }

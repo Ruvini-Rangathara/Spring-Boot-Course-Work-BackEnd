@@ -35,11 +35,12 @@ public class DriverServiceImpl implements DriverService {
     }
 
     @Override
-    public void delete(String id) {
+    public boolean delete(String id) {
         if(!driverRepo.existsById(id)) throw new NotFoundException("Driver Not Found!");
         DriverEntity driverEntity = new DriverEntity();
         driverEntity.setDriverId(id);
         driverRepo.delete(driverEntity);
+        return true;
     }
 
     @Override
@@ -61,5 +62,10 @@ public class DriverServiceImpl implements DriverService {
     @Override
     public String getLastId() {
         return driverRepo.getLastId();
+    }
+
+    @Override
+    public boolean existById(String id) {
+        return existById(id);
     }
 }

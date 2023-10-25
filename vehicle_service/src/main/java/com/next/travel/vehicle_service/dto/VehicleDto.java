@@ -21,9 +21,10 @@ public class VehicleDto {
     private String vehicleType;
     private String transmissionType;  //auto or manual
     private String availability;
+    private double pricePerDay;
     private String remark;
     private List<byte[]> images;
 
-    private DriverDto driverDto;
+    private DriverDto driver;
 
 }
