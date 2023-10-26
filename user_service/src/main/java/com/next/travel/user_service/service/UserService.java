@@ -5,10 +5,11 @@ import com.next.travel.user_service.dto.UserDto;
 import java.util.List;
 
 public interface UserService {
-    UserDto save(UserDto userDto);
+    boolean save(UserDto userDto);
     UserDto update(UserDto userDto);
-    void delete(String id);
+    boolean delete(String id);
     UserDto searchById(String id);
     List<UserDto> getAll();
     String getLastId();
+    boolean existById(String id);
 }

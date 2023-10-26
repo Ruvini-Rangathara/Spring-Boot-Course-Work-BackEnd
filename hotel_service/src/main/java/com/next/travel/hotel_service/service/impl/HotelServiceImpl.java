@@ -63,5 +63,10 @@ public class HotelServiceImpl implements HotelService {
         return hotelRepo.getLastId();
     }
 
+    @Override
+    public boolean existById(String id) {
+        return hotelRepo.existsById(id);
+    }
+
 
 }

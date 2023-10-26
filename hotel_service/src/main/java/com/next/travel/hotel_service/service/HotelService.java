@@ -12,6 +12,6 @@ public interface HotelService {
     HotelDto searchById(String id);
     List<HotelDto> getAll();
     String getLastId();
-
+    boolean existById(String id);
 
 }

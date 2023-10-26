@@ -18,6 +18,7 @@ public class HotelEntity implements Serializable {
     private String hotelCode;
     private String name;
     private String category;
+    private int startRate;
     private String location;
     private String email;
 
@@ -28,14 +29,23 @@ public class HotelEntity implements Serializable {
 
     @ElementCollection
     @CollectionTable(name = "image_data", joinColumns = @JoinColumn(name = "entity_id"))
-    @Column(name = "image", columnDefinition = "BLOB")
-    private List<Byte[]> imageList = new ArrayList<>();
+    @Column(name = "image", columnDefinition = "LONGBLOB")
+    private List<byte[]> imageList = new ArrayList<>();
 
     // Define the one-to-many relationship with DiscountEntity
     @OneToMany(mappedBy = "hotel") // "hotel" refers to the property name in DiscountEntity
     private List<DiscountEntity> discounts = new ArrayList<>();
 
-    // Define the one-to-many relationship with RoomEntity
-    @OneToMany(mappedBy = "hotel") // "hotel" refers to the property name in RoomEntity
-    private List<OptionEntity> rooms = new ArrayList<>();
+//    // Define the one-to-many relationship with RoomEntity
+//    @OneToMany(mappedBy = "hotel") // "hotel" refers to the property name in RoomEntity
+//    private List<OptionEntity> rooms = new ArrayList<>();
+//
+
+//    @ElementCollection
+//    @CollectionTable(name = "options", joinColumns = @JoinColumn(name = "entity_id"))
+//    private List<Double> optionList = new ArrayList<>();
+
+
+    @OneToMany(cascade ={ CascadeType.ALL}, fetch = FetchType.EAGER)
+    private List<OptionEntity> optionsList = new ArrayList<>();
 }

@@ -23,6 +23,7 @@ public class UserEntity {
     private int age;
     private String address;
     private String contactNo;
+    private String role;
     private String nicOrPassportNo;
     private byte[] nicOrPassportFront;
     private byte[] nicOrPassportBack;

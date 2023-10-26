@@ -2,11 +2,13 @@ package com.next.travel.hotel_service.entity;
 
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.io.Serializable;
 
@@ -15,11 +17,13 @@ import java.io.Serializable;
 @Data
 @Entity(name = "option")
 public class OptionEntity implements Serializable {
-    @Id
-    private String optionId;
     private int optionNumber;
     private double price;
-    // Define the many-to-one relationship with HotelEntity
+    private int capacity;
+    @Id
+    @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
+    private int id;
     @ManyToOne
-    private HotelEntity hotel;
+    @ToString.Exclude
+    private HotelEntity hotelEntity;
 }

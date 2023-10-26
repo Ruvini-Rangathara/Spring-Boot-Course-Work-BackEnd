@@ -1,13 +1,11 @@
 package com.next.travel.user_service.controller;
 
-
-import com.next.travel.user_service.dto.PromotionDto;
 import com.next.travel.user_service.dto.UserDto;
-import com.next.travel.user_service.exception.InvalidException;
+import com.next.travel.user_service.payload.exceptions.UserValidationException;
+import com.next.travel.user_service.payload.responses.MessageResponse;
 import com.next.travel.user_service.service.UserService;
-import com.next.travel.user_service.util.StandardResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,6 +13,7 @@ import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping("/api/v1/user")
+@CrossOrigin(origins = "*")
 public class UserApi {
 
     private final UserService userService;
@@ -25,51 +24,90 @@ public class UserApi {
     }
 
 
-    @PostMapping
-    public ResponseEntity<StandardResponse> addUser(@RequestBody UserDto userDto) {
-        validateUserData(userDto);
-        userService.save(userDto);
-        return new ResponseEntity<>(new StandardResponse(201, "Saved successfully!!", userDto.toString()), HttpStatus.CREATED);
-    }
+    @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> register(@RequestPart("nic_front") byte[] nic_front, @RequestPart("nic_back") byte[] nic_back, @RequestPart("user") UserDto userDto) {
+        System.out.println("register");
+        try {
+            userDto.setRole("ROLE_USER");
+            validateUserdata(userDto);
 
-    @GetMapping("/{id}")
-    public ResponseEntity<StandardResponse> findUser(@PathVariable String id) {
-        UserDto userDto = userService.searchById(id);
-        return new ResponseEntity<>(new StandardResponse(200, "User was found!", userService.searchById(id)), HttpStatus.OK);
-    }
-
-    @PutMapping
-    public ResponseEntity<StandardResponse> updateUser(@RequestParam String id, @RequestBody UserDto userDto) {
-        validateUserData(userDto);
-        userService.update(userDto);
-        return new ResponseEntity<>(new StandardResponse(201, "Updated User Data!", userDto.toString()), HttpStatus.OK);
-
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<StandardResponse> deleteUser(@PathVariable String id) {
-        userService.delete(id);
-        return new ResponseEntity<>(new StandardResponse(204, "Deleted User Data!", id), HttpStatus.NO_CONTENT);
-    }
-
-    @GetMapping(path = "/list")
-    public ResponseEntity<StandardResponse> findAllUser() {
-        return new ResponseEntity<>(new StandardResponse(200, "User Data List! ", userService.getAll()), HttpStatus.OK);
-    }
-
-    private void validateUserData(UserDto userDto) throws RuntimeException {
-        if (!Pattern.compile("^(?=.*\\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$").matcher(userDto.getPassword()).matches()) {
-            throw new InvalidException("Invalid password!");
+            validateImages(nic_front, nic_back);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage(), null));
         }
-        else if (!Pattern.compile("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$\n").matcher(userDto.getEmail()).matches()) {
-            throw new InvalidException("Invalid email type!");
+        Boolean existsUserByUsername = userService.existById(userDto.getUsername());
+
+        userDto.setNicOrPassportFront(nic_front);
+        userDto.setNicOrPassportBack(nic_back);
+        if (existsUserByUsername)
+            return ResponseEntity.badRequest().body(new MessageResponse("Username already exists", null));
+
+
+        return userService.save(userDto) ? ResponseEntity.ok().body(new MessageResponse("User registration successful", null)) : ResponseEntity.badRequest().body(new MessageResponse("User registration failed", null));
+    }
+
+    private void validateImages(byte[] nicFront, byte[] nicBack) {
+        try {
+            if (nicFront == null || nicFront.length == 0) throw new RuntimeException("NIC Front image is required.");
+            if (nicBack == null || nicBack.length == 0) throw new RuntimeException("NIC Back image is required.");
+        } catch (Exception e) {
+            throw new RuntimeException("Error validating images: " + e.getMessage());
         }
-        else if (!Pattern.compile("^\\d{7}[0-9Vv]|^\\d{9}$").matcher(userDto.getNicOrPassportNo()).matches()) {
-            throw new InvalidException("Invalid NIC No type!");
+    }
+
+    private void validateUserdata(UserDto userDTO) throws RuntimeException {
+        if (!Pattern.compile("^([a-zA-Z]+( [a-zA-Z]+)*)$").matcher(userDTO.getUsername()).matches()) {
+            System.out.println("invalid username");
+            throw new UserValidationException("Invalid userDTO name type!");
+        } else if (!(Pattern.compile("^([0-9]{9}[x|X|v|V]|[0-9]{12})$").matcher(userDTO.getNicOrPassportNo()).matches() | Pattern.compile("^(\\d{4})(\\d{3})(\\d{4})(\\d{1})$").matcher(userDTO.getNicOrPassportNo()).matches())) {
+            System.out.println("invalid nic pattern");
+            throw new UserValidationException("invalid nic pattern");
+        } else if (!(Pattern.compile("^\\d+$").matcher(String.valueOf(userDTO.getAge())).matches() && userDTO.getAge() > 0)) {
+            System.out.println("invalid age");
+            throw new UserValidationException("invalid age");
+        } else if (!(userDTO.getGender().equalsIgnoreCase("male") || userDTO.getGender().equalsIgnoreCase("female"))) {
+            System.out.println("invalid gender");
+            throw new UserValidationException("invalid gender");
+        } else if (!Pattern.compile("^([a-zA-Z0-9_.-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,})$").matcher(userDTO.getEmail()).matches()) {
+            System.out.println("invalid email");
+            throw new UserValidationException("Invalid email address!");
+        } else if (!Pattern.compile("^\\d{10}$").matcher(userDTO.getContactNo()).matches()) {
+            System.out.println("invalid contact number");
+            throw new UserValidationException("Invalid contact number!");
+        } else if (userDTO.getPassword() == null) {
+            System.out.println("invalid password");
+            throw new UserValidationException("Password is null");
+        } else if (userDTO.getRole() == null) {
+            System.out.println("invalid role");
+            throw new UserValidationException("invalid role");
         }
-        else if (!Pattern.compile("^[A-Z]{1,2}\\d{7}$").matcher(userDto.getNicOrPassportNo()).matches()) {
-            throw new InvalidException("Invalid Passport No type!");
+    }
+/*
+if (!Pattern.compile("^U\\d{3,}$").matcher(userDTO.getUser_id()).matches())
+        throw new UserValidationException("Invalid userDTO id type!");
+*/
+
+    @GetMapping("/check/{username}")
+    public ResponseEntity<?> checkUsername(@PathVariable String username) {
+        Boolean existsUserByUsername = userService.existById(username);
+        if (!existsUserByUsername) return ResponseEntity.ok(true);
+        return ResponseEntity.badRequest().body(new MessageResponse("Username already exists", null));
+    }
+
+    @GetMapping("/getnewid")
+    public ResponseEntity<?> getOngoingUserID() {
+        String newUserID = userService.getLastId();
+        return ResponseEntity.ok(new MessageResponse(newUserID, null));
+    }
+
+    public ResponseEntity<?> deleteUserByUsername(String username) {
+        if (!Pattern.compile("^U\\d{3,}$").matcher(username).matches())
+            throw new UserValidationException("Invalid username type!");
+        Boolean existsUserByUsername = userService.existById(username);
+        if (existsUserByUsername) {
+            return userService.delete(username) ? ResponseEntity.ok().body(new MessageResponse("User deleted successfully", null)) : ResponseEntity.ok().body(new MessageResponse("User deletion failed", null));
         }
+        return ResponseEntity.badRequest().body(new MessageResponse("User not found", null));
     }
 
 }

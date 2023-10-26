@@ -7,6 +7,7 @@ import com.next.travel.hotel_service.service.HotelService;
 import com.next.travel.hotel_service.util.StandardResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,6 +16,7 @@ import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping("/api/v1/hotel")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class HotelApi {
 
     private final HotelService hotelService;
@@ -24,63 +26,136 @@ public class HotelApi {
         this.hotelService = hotelService;
     }
 
-
-    @PostMapping
-    public ResponseEntity<StandardResponse> addHotel(@RequestBody HotelDto hotelDto) {
-        validateHotelData(hotelDto);
-        hotelService.save(hotelDto);
-        return new ResponseEntity<>(new StandardResponse(201, "Saved successfully!!", hotelDto.toString()), HttpStatus.CREATED);
+    @GetMapping("/get/lastId")
+    public String getOngoingHotelId() {
+        System.out.println("getOngoingHotelId() called");
+        String ongoingHotelId = hotelService.getLastId();
+        System.out.println("ongoingHotelId = " + ongoingHotelId);
+        return ongoingHotelId;
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<StandardResponse> findHotel(@PathVariable String id) {
-        HotelDto hotelDto = hotelService.searchById(id);
-        return new ResponseEntity<>(new StandardResponse(200, "Hotel was found!", hotelService.searchById(id)), HttpStatus.OK);
-    }
-
-    @PutMapping
-    public ResponseEntity<StandardResponse> updateHotel(@RequestParam String id, @RequestBody HotelDto hotelDto) {
-        validateHotelData(hotelDto);
-        hotelService.update(hotelDto);
-        return new ResponseEntity<>(new StandardResponse(201, "Updated Hotel Data!", hotelDto.toString()), HttpStatus.OK);
-
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<StandardResponse> deleteHotel(@PathVariable String id) {
-        hotelService.delete(id);
-        return new ResponseEntity<>(new StandardResponse(204, "Deleted Hotel Data!", id), HttpStatus.NO_CONTENT);
-    }
-
-    @GetMapping(path = "/list")
-    public ResponseEntity<StandardResponse> findAllHotel() {
-        return new ResponseEntity<>(new StandardResponse(200, "Hotel Data List! ", hotelService.getAll()), HttpStatus.OK);
-    }
-
-    @GetMapping(path = "/id")
-    public ResponseEntity<StandardResponse> getNewId() {
-        String lastId = hotelService.getLastId(); // Get the last ID
-        String prefix = lastId.substring(0, 1); // Extract the prefix (e.g., "G")
-        int number = Integer.parseInt(lastId.substring(1)); // Extract the number (e.g., 0003)
-        number++; // Increment the number
-        String newId = String.format("%s%04d", prefix, number); // Create the new ID with zero-padding
-
-        return new ResponseEntity<>(new StandardResponse(200, "New Hotel code! ", newId), HttpStatus.OK);
-    }
-
-    private void validateHotelData(HotelDto hotelDto) throws RuntimeException {
-        if (!Pattern.compile("^H\\d{3,}$").matcher(hotelDto.getHotelCode()).matches()) {
-            throw new InvalidException("Invalid id type!");
-
-        } else if (!Pattern.compile("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$\n").matcher(hotelDto.getEmail()).matches()) {
-            throw new InvalidException("Invalid email type!");
-        }
-        for (String contactNumber : hotelDto.getContactNo()) {
-            if (!(Pattern.compile("^0\\d{9}$").matcher(contactNumber).matches())) {
-                throw new InvalidException("Invalid Contact No");
+    @PostMapping(value = "/save", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> saveHotel(@RequestPart("img1") byte[] img1,
+                                       @RequestPart("img2") byte[] img2,
+                                       @RequestPart("img3") byte[] img3,
+                                       @RequestPart("img4") byte[] img4,
+                                       @RequestPart("hotel") HotelDto hotelDto) {
+        hotelDto.getImageList().add(img1);
+        hotelDto.getImageList().add(img2);
+        hotelDto.getImageList().add(img3);
+        hotelDto.getImageList().add(img4);
+        try {
+            validateHotelDetails(hotelDto);
+            if (hotelService.existById(hotelDto.getHotelCode())) {
+                return ResponseEntity.badRequest().body("Hotel is already exists");
             }
+            System.out.println("Api -> hotelDto = " + hotelDto);
+            HotelDto save = hotelService.save(hotelDto);
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+
+    }
+
+    private void validateHotelDetails(HotelDto hotelDto) {
+        if (!Pattern.compile("^H\\d{3,}$").matcher(hotelDto.getHotelCode()).matches())
+            throw new RuntimeException("Invalid hotel id");
+        if (!Pattern.compile("^[A-Za-z0-9 ]{3,}$").matcher(hotelDto.getName()).matches())
+            throw new RuntimeException("Invalid hotel name");
+        if (!Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)$").matcher(hotelDto.getEmail()).matches())
+            throw new RuntimeException("Invalid hotel email");
+
+        if (!Pattern.compile("^[A-Za-z0-9 ]{3,}$").matcher(hotelDto.getLocation()).matches())
+            throw new RuntimeException("Invalid hotel location");
+        try {
+            if (!Pattern.compile("^\\d{1,}$").matcher(String.valueOf(hotelDto.getStartRate())).matches()) {
+                throw new RuntimeException("Invalid hotel star rate");
+            } else {
+                int star_rate = Integer.parseInt(String.valueOf(hotelDto.getStartRate()));
+                if (star_rate < 1 || star_rate > 5) {
+                    throw new RuntimeException("Invalid hotel star rate");
+                }
+            }
+        } catch (NumberFormatException e) {
+            throw new RuntimeException("Invalid hotel star rate");
+        }
+
+//        if (!(Pattern.compile("true").matcher(hotelDto.getPetsAllowedOrNot()).matches() || Pattern.compile("false").matcher(hotelDto.getPetsAllowedOrNot()).matches()))
+//            throw new RuntimeException("Invalid hotel pet allowed");   // do nothing
+
+//        try {
+//            if (!Pattern.compile("^\\d+(?:\\.\\d+)?$").matcher(String.valueOf(hotelDto.getTax())).matches())
+//                throw new RuntimeException("Invalid fee per day!");
+//        } catch (NumberFormatException e) {
+//            throw new RuntimeException("Invalid tax !");
+//        }
+
+        hotelDto.getOptionsList().forEach(element -> {
+            if (element.getOptionNumber() == 0 && element.getPrice() == 0) {
+                throw new RuntimeException("Invalid option type !");
+            }
+        });
+
+        hotelDto.getImageList().forEach(element -> {
+            if (element == null || element.length == 0)
+                throw new RuntimeException("Invalid or empty image found in the list.");
+        });
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteHotel(@RequestHeader String id) {
+        if (hotelService.existById(id)) {
+            hotelService.delete(id);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.badRequest().body("Hotel not found");
         }
     }
 
+    @GetMapping("/get")
+    public ResponseEntity<?> getHotel(@RequestHeader String id) {
+        if (hotelService.existById(id)) {
+            HotelDto hotelDto = hotelService.searchById(id);
+            return ResponseEntity.ok().body(hotelDto);
+        } else {
+            return ResponseEntity.badRequest().body("Hotel not found");
+        }
+    }
+
+    @PatchMapping(value = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> updateHotel(@RequestPart("img1") byte[] img1,
+                                         @RequestPart("img2") byte[] img2,
+                                         @RequestPart("img3") byte[] img3,
+                                         @RequestPart("img4") byte[] img4,
+                                         @RequestPart("hotel") HotelDto hotelDto) {
+        hotelDto.getImageList().add(img1);
+        hotelDto.getImageList().add(img2);
+        hotelDto.getImageList().add(img3);
+        hotelDto.getImageList().add(img4);
+
+        try {
+            validateHotelDetails(hotelDto);
+            if (!hotelService.existById(hotelDto.getHotelCode())) {
+                return ResponseEntity.badRequest().body("Hotel not found!");
+            }
+            System.out.println("Api -> hotelDto = " + hotelDto);
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/getAll")
+    public ResponseEntity<?> getAllHotels() {
+        try {
+            return ResponseEntity.ok().body(hotelService.getAll());
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 
 }

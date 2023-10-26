@@ -2,7 +2,7 @@ package com.next.travel.user_service.service.impl;
 
 import com.next.travel.user_service.dto.UserDto;
 import com.next.travel.user_service.entity.UserEntity;
-import com.next.travel.user_service.exception.NotFoundException;
+import com.next.travel.user_service.payload.exceptions.NotFoundException;
 import com.next.travel.user_service.repository.UserRepo;
 import com.next.travel.user_service.service.UserService;
 import com.next.travel.user_service.util.mapper.Convertor;
@@ -24,8 +24,10 @@ public class UserServiceImpl implements UserService {
     Convertor convertor;
 
     @Override
-    public UserDto save(UserDto userDto) {
-        return convertor.getUserDto(userRepo.save(convertor.getUserEntity(userDto)));
+    public boolean save(UserDto userDto) {
+
+        convertor.getUserDto(userRepo.save(convertor.getUserEntity(userDto)));
+        return true;
     }
 
     @Override
@@ -34,16 +36,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void delete(String id) {
-        if(!userRepo.existsById(id)) throw new NotFoundException("User Not Found!");
+    public boolean delete(String id) {
+        if (!userRepo.existsById(id)) throw new NotFoundException("User Not Found!");
 
-        UserEntity userEntity= userRepo.getReferenceById(id);
-        userRepo.delete(userEntity);
+        UserEntity userEntity = userRepo.getReferenceById(id);
+        return userRepo.deleteUserByUsername(userEntity.getUsername());
     }
 
     @Override
     public UserDto searchById(String id) {
-        if(!userRepo.existsById(id)) throw new NotFoundException("User Not Found!");
+        if (!userRepo.existsById(id)) throw new NotFoundException("User Not Found!");
         return convertor.getUserDto(userRepo.getReferenceById(id));
 
     }
@@ -52,7 +54,7 @@ public class UserServiceImpl implements UserService {
     public List<UserDto> getAll() {
         List<UserEntity> all = userRepo.findAll();
         List<UserDto> list = new ArrayList<>();
-        for (UserEntity entity: all) {
+        for (UserEntity entity : all) {
             list.add(convertor.getUserDto(entity));
         }
         return list;
@@ -61,5 +63,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public String getLastId() {
         return userRepo.getLastId();
+    }
+
+    @Override
+    public boolean existById(String id) {
+        return userRepo.existsById(id);
     }
 }
