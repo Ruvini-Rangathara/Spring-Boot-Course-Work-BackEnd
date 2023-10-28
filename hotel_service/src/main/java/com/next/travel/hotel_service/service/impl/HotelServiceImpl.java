@@ -59,8 +59,8 @@ public class HotelServiceImpl implements HotelService {
     }
 
     @Override
-    public String getLastId() {
-        return hotelRepo.getLastId();
+    public String getNewId() {
+        return hotelRepo.getNewId();
     }
 
     @Override

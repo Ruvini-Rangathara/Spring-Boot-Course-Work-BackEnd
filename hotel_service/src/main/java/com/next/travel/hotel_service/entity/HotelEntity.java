@@ -36,16 +36,6 @@ public class HotelEntity implements Serializable {
     @OneToMany(mappedBy = "hotel") // "hotel" refers to the property name in DiscountEntity
     private List<DiscountEntity> discounts = new ArrayList<>();
 
-//    // Define the one-to-many relationship with RoomEntity
-//    @OneToMany(mappedBy = "hotel") // "hotel" refers to the property name in RoomEntity
-//    private List<OptionEntity> rooms = new ArrayList<>();
-//
-
-//    @ElementCollection
-//    @CollectionTable(name = "options", joinColumns = @JoinColumn(name = "entity_id"))
-//    private List<Double> optionList = new ArrayList<>();
-
-
     @OneToMany(cascade ={ CascadeType.ALL}, fetch = FetchType.EAGER)
     private List<OptionEntity> optionsList = new ArrayList<>();
 }

@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface GuideRepo extends JpaRepository<GuideEntity, String> {
-    @Query(value = "SELECT LAST_INSERT_ID() AS last_id FROM guide", nativeQuery = true)
+
+    @Query("SELECT MAX (g.guideId) FROM guide g")
     String getLastId();
 }

@@ -58,12 +58,18 @@ public class GuideServiceImpl implements GuideService {
     }
 
     @Override
-    public String getLastId() {
-        return guideRepo.getLastId();
+    public String getNewId() {
+
+        String lastId = guideRepo.getLastId();
+        if (lastId == null) return "G0001";
+        String[] split = lastId.split("[G]");
+        int lastDigits = Integer.parseInt(split[1]);
+        lastDigits++;
+        return (String.format("G%04d", lastDigits));
     }
 
     @Override
     public boolean existById(String id) {
-        return existById(id);
+        return guideRepo.existsById(id);
     }
 }

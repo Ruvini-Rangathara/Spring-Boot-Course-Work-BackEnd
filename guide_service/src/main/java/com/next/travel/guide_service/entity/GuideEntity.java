@@ -1,11 +1,13 @@
 package com.next.travel.guide_service.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -19,15 +21,15 @@ public class GuideEntity {
     private int age;
     private String gender;
     private String contactNo;
-    @Lob
+    @Column(columnDefinition = "LONGBLOB")
     private byte[] photo;
-    @Lob
+    @Column(columnDefinition = "LONGBLOB")
     private byte[] nicFrontImage;
-    @Lob
+    @Column(columnDefinition = "LONGBLOB")
     private byte[] nicBackImage;
-    @Lob
+    @Column(columnDefinition = "LONGBLOB")
     private byte[] guidIdFrontImage;
-    @Lob
+    @Column(columnDefinition = "LONGBLOB")
     private byte[] guideIdBackImage;
     private String experience;
     private double manDayValue;

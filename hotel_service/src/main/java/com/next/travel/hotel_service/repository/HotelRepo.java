@@ -10,8 +10,8 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface HotelRepo extends JpaRepository<HotelEntity, String> {
-    @Query(value = "SELECT LAST_INSERT_ID() AS last_id FROM hotel", nativeQuery = true)
-    String getLastId();
+    @Query("SELECT MAX (h.hotelCode) FROM hotel h")
+    String getNewId();
 
 
 }

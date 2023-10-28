@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping("/api/v1/hotel")
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+@CrossOrigin(origins = "http://localhost:63342")
 public class HotelApi {
 
     private final HotelService hotelService;
@@ -27,18 +27,18 @@ public class HotelApi {
     }
 
     @GetMapping("/get/lastId")
-    public String getOngoingHotelId() {
+    public String getNewHotelId() {
         System.out.println("getOngoingHotelId() called");
-        String ongoingHotelId = hotelService.getLastId();
+        String ongoingHotelId = hotelService.getNewId();
         System.out.println("ongoingHotelId = " + ongoingHotelId);
         return ongoingHotelId;
     }
 
     @PostMapping(value = "/save", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> saveHotel(@RequestPart("img1") byte[] img1,
-                                       @RequestPart("img2") byte[] img2,
-                                       @RequestPart("img3") byte[] img3,
-                                       @RequestPart("img4") byte[] img4,
+    public ResponseEntity<?> saveHotel(@RequestPart("hotel_img1") byte[] img1,
+                                       @RequestPart("hotel_img2") byte[] img2,
+                                       @RequestPart("hotel_img3") byte[] img3,
+                                       @RequestPart("hotel_img4") byte[] img4,
                                        @RequestPart("hotel") HotelDto hotelDto) {
         hotelDto.getImageList().add(img1);
         hotelDto.getImageList().add(img2);
@@ -82,16 +82,6 @@ public class HotelApi {
             throw new RuntimeException("Invalid hotel star rate");
         }
 
-//        if (!(Pattern.compile("true").matcher(hotelDto.getPetsAllowedOrNot()).matches() || Pattern.compile("false").matcher(hotelDto.getPetsAllowedOrNot()).matches()))
-//            throw new RuntimeException("Invalid hotel pet allowed");   // do nothing
-
-//        try {
-//            if (!Pattern.compile("^\\d+(?:\\.\\d+)?$").matcher(String.valueOf(hotelDto.getTax())).matches())
-//                throw new RuntimeException("Invalid fee per day!");
-//        } catch (NumberFormatException e) {
-//            throw new RuntimeException("Invalid tax !");
-//        }
-
         hotelDto.getOptionsList().forEach(element -> {
             if (element.getOptionNumber() == 0 && element.getPrice() == 0) {
                 throw new RuntimeException("Invalid option type !");
@@ -124,7 +114,7 @@ public class HotelApi {
         }
     }
 
-    @PatchMapping(value = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updateHotel(@RequestPart("img1") byte[] img1,
                                          @RequestPart("img2") byte[] img2,
                                          @RequestPart("img3") byte[] img3,
@@ -156,6 +146,14 @@ public class HotelApi {
             e.printStackTrace();
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+
+    @GetMapping("/check/")
+    public ResponseEntity<?> existsByHotelId(@RequestHeader String hotel_code) {
+        boolean isExists = hotelService.existById(hotel_code);
+        if (isExists) return ResponseEntity.ok(true);
+        return ResponseEntity.ok().body(false);
     }
 
 }
