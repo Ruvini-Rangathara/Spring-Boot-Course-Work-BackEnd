@@ -58,7 +58,7 @@ public class GuideApi {
     private void validateGuideDetails(GuideDto guide) {
         if (!Pattern.compile("^G\\d{3,}$").matcher(guide.getGuideId()).matches())
             throw new RuntimeException("Invalid driver id");
-        if (!Pattern.compile("^[a-zA-Z '-]+$").matcher(guide.getName()).matches())
+        if (!Pattern.compile("^[A-Za-z.]+$").matcher(guide.getName()).matches())
             throw new RuntimeException("Invalid driver name");
         if (!Pattern.compile("^\\d{10}$").matcher(guide.getContactNo()).matches())
             throw new RuntimeException("Invalid driver contact number");
@@ -68,11 +68,11 @@ public class GuideApi {
             throw new RuntimeException("Invalid address");
         try {
             if (!Pattern.compile("^\\d+$").matcher(String.valueOf(guide.getAge())).matches())
-                throw new RuntimeException("Invalid seat capacity!");
+                throw new RuntimeException("Invalid Age!");
             if (!Pattern.compile("^\\d+(\\.\\d+)?$").matcher(String.valueOf(guide.getManDayValue())).matches())
-                throw new RuntimeException("invalid price per day!");
+                throw new RuntimeException("invalid man day value!");
         } catch (NumberFormatException e) {
-            throw new RuntimeException("invalid price per day!");
+            throw new RuntimeException(e);
         }
 
         if (guide.getPhoto() == null || guide.getNicFrontImage() == null || guide.getNicBackImage() == null || guide.getGuidIdFrontImage() == null || guide.getGuideIdBackImage() == null)
@@ -99,7 +99,7 @@ public class GuideApi {
 
     }
 
-    @PatchMapping(value = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> patch(@RequestPart("nic_front") byte[] nic_front, @RequestPart("nic_back") byte[] nic_back, @RequestPart("guide_id_front") byte[] guide_id_front, @RequestPart("guide_id_back") byte[] guide_id_back, @RequestPart("profile") byte[] guide_img, @RequestPart("guide") GuideDto guide) {
         guide.setPhoto(guide_img);
         guide.setNicFrontImage(nic_front);

@@ -68,8 +68,13 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public String getLastId() {
-        return vehicleRepo.getLastId();
+    public String getNewId() {
+        String lastId = vehicleRepo.getLastId();
+        if (lastId == null) return "V0001";
+        String[] split = lastId.split("[V]");
+        int lastDigits = Integer.parseInt(split[1]);
+        lastDigits++;
+        return (String.format("V%04d", lastDigits));
     }
 
     @Override

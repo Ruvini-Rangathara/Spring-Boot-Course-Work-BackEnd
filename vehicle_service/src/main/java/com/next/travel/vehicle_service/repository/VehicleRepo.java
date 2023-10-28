@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 public interface VehicleRepo extends JpaRepository<VehicleEntity, String> {
-    @Query(value = "SELECT LAST_INSERT_ID() AS last_id FROM vehicle", nativeQuery = true)
+    @Query("SELECT MAX (v.vehicleId) FROM vehicle v")
     String getLastId();
 }

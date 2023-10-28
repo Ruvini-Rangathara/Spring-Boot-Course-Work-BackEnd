@@ -10,7 +10,7 @@ public interface DriverService {
     boolean delete(String id);
     DriverDto searchById(String id);
     List<DriverDto> getAll();
-    String getLastId();
+    String getNewId();
     boolean existById(String id);
 
 }

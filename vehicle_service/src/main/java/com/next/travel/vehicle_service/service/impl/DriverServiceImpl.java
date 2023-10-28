@@ -60,12 +60,17 @@ public class DriverServiceImpl implements DriverService {
     }
 
     @Override
-    public String getLastId() {
-        return driverRepo.getLastId();
+    public String getNewId() {
+        String lastId = driverRepo.getLastId();
+        if (lastId == null) return "D0001";
+        String[] split = lastId.split("[D]");
+        int lastDigits = Integer.parseInt(split[1]);
+        lastDigits++;
+        return (String.format("D%04d", lastDigits));
     }
 
     @Override
     public boolean existById(String id) {
-        return existById(id);
+        return driverRepo.existsById(id);
     }
 }

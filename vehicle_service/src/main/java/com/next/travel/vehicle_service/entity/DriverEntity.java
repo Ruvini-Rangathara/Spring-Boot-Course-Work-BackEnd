@@ -1,12 +1,10 @@
 package com.next.travel.vehicle_service.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,11 +16,12 @@ public class DriverEntity {
     private String driverId;
     private String name;
     private String contactNo;
-    @Lob
+    @Column(columnDefinition = "LONGBLOB")
     private byte[] licenseFront;
-    @Lob
+    @Column(columnDefinition = "LONGBLOB")
     private byte[] licenseBack;
 
+    @ToString.Exclude
     @OneToOne(mappedBy = "driver")
     private VehicleEntity vehicle;
 }

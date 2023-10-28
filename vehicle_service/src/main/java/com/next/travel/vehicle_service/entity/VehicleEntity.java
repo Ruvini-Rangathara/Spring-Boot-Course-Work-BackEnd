@@ -28,7 +28,7 @@ public class VehicleEntity {
 
     @ElementCollection
     @CollectionTable(name = "image_data", joinColumns = @JoinColumn(name = "entity_id"))
-    @Column(name = "image", columnDefinition = "BLOB")
+    @Column(name = "image", columnDefinition = "LONGBLOB")
     private List<Byte[]> imageList;
 
     @OneToOne

@@ -11,6 +11,6 @@ public interface VehicleService {
     boolean delete(String id);
     VehicleDto searchById(String id);
     List<VehicleDto> getAll();
-    String getLastId();
+    String getNewId();
     boolean existById(String id);
 }

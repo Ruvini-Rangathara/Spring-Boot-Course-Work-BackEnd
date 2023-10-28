@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping("/api/v1/vehicle")
-@CrossOrigin(origins = "*",allowedHeaders = "*")
+@CrossOrigin(origins = "http://localhost:63342")
 public class VehicleApi {
 
     private final VehicleService vehicleService;
@@ -29,8 +29,16 @@ public class VehicleApi {
         this.driverService = driverService;
     }
 
+
+    @CrossOrigin(origins = "http://localhost:63342")
     @PostMapping(value = "/save", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<StandardResponse> saveVehicle(@RequestPart("vehicle_img1") byte[] vehicle_img1, @RequestPart("vehicle_img2") byte[] vehicle_img2, @RequestPart("vehicle_img3") byte[] vehicle_img3, @RequestPart("vehicle_img4") byte[] vehicle_img4, @RequestPart("vehicle_img5") byte[] vehicle_img5, @RequestPart("vehicle") VehicleDto vehicleDto, @RequestPart("driver_id") String driver_id) {
+    public ResponseEntity<StandardResponse> saveVehicle(@RequestPart("vehicle_img1") byte[] vehicle_img1,
+                                                        @RequestPart("vehicle_img2") byte[] vehicle_img2,
+                                                        @RequestPart("vehicle_img3") byte[] vehicle_img3,
+                                                        @RequestPart("vehicle_img4") byte[] vehicle_img4,
+                                                        @RequestPart("vehicle_img5") byte[] vehicle_img5,
+                                                        @RequestPart("vehicle") VehicleDto vehicleDto,
+                                                        @RequestPart("driver_id") String driver_id) {
 
         System.out.println("VehicleController -> " + vehicleDto);
 
@@ -98,11 +106,12 @@ public class VehicleApi {
 
     @GetMapping("/get/lastId")
     public ResponseEntity<?> getOngoingID() {
-        String lastVehicleId = vehicleService.getLastId();
+        String lastVehicleId = vehicleService.getNewId();
+        System.out.println("last vehicle id in backend : "+lastVehicleId);
         return ResponseEntity.ok(lastVehicleId);
     }
 
-    @PatchMapping(value = "/update" , consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = "/update" , consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updateVehicle(
             @RequestPart("vehicle_img1") byte[] vehicle_img1,
             @RequestPart("vehicle_img2") byte[] vehicle_img2,
@@ -139,7 +148,7 @@ public class VehicleApi {
         if (!Pattern.compile("^V\\d{3,}$").matcher(vehicleDto.getVehicleId()).matches()) {
             throw new InvalidException("Invalid id type!");
 
-        } else if (!Pattern.compile("^[1-9]\\\\d*$").matcher(String.valueOf(vehicleDto.getSeatCapacity())).matches()) {
+        } else if (!Pattern.compile("^\\d*$").matcher(String.valueOf(vehicleDto.getSeatCapacity())).matches()) {
             throw new InvalidException("Invalid capacity!");
         }
     }

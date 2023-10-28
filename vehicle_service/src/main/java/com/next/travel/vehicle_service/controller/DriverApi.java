@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping("/api/v1/driver")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:63342")
 public class DriverApi {
 
     private final DriverService driverService;
@@ -29,7 +29,7 @@ public class DriverApi {
         this.vehicleService = vehicleService;
     }
 
-
+    @CrossOrigin(origins = "http://localhost:63342")
     @PostMapping(value = "/save", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<StandardResponse> saveDriver(@RequestPart("licenseFront") byte[] img1,
                                                        @RequestPart("licenseBack") byte[] img2,
@@ -39,15 +39,14 @@ public class DriverApi {
 
         driverDto.setLicenseFront(img1);
         driverDto.setLicenseBack(img2);
+
         try {
-
             validateDriverData(driverDto);
+            driverService.save(driverDto);
             System.out.println("validated");
-
-
             return new ResponseEntity<>(new StandardResponse(201, "Driver was saved!", driverDto.toString()), HttpStatus.CREATED);
         } catch (RuntimeException e) {
-            e.printStackTrace();
+            System.out.println("driver "+e);
             return new ResponseEntity<>(new StandardResponse(400, "Driver was not saved!", driverDto.toString()), HttpStatus.BAD_REQUEST);
         }
 
@@ -95,19 +94,18 @@ public class DriverApi {
 
     @GetMapping("/get/lastId")
     public ResponseEntity<?> getOngoingID() {
-        String lastDriverId = driverService.getLastId();
+        String lastDriverId = driverService.getNewId();
+        System.out.println("last driver id in backend : "+lastDriverId);
         return ResponseEntity.ok(lastDriverId);
     }
 
-    @PatchMapping(value = "/update" , consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = "/update" , consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updateVehicle(
             @RequestPart("licenseFront") byte[] license1,
             @RequestPart("licenseBack") byte[] license2,
-            @RequestPart("driver") DriverDto driverDto,
-            @RequestPart("driver_id") String driver_id,
-            @RequestPart("vehicle_id") String vehicle_id)
+            @RequestPart("driver") DriverDto driverDto)
     {
-        System.out.println("Patch -> " + driver_id);
+        System.out.println("put -> " + driverDto.getDriverId());
         driverDto.setLicenseFront(license1);
         driverDto.setLicenseBack(license2);
         try {
@@ -115,7 +113,7 @@ public class DriverApi {
 //            System.out.println("validated");
             if (driverService.existById(driverDto.getDriverId())) {
 //                System.out.println("exists");
-                driverDto.setVehicleDto(vehicleService.searchById(vehicle_id));
+
                 driverService.save(driverDto);
                 return ResponseEntity.ok().build();
             }

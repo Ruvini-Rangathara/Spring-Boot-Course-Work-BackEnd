@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 public interface DriverRepo extends JpaRepository<DriverEntity, String> {
-    @Query(value = "SELECT LAST_INSERT_ID() AS last_id FROM driver", nativeQuery = true)
+    @Query("SELECT MAX (d.driverId) FROM driver d")
     String getLastId();
 }
