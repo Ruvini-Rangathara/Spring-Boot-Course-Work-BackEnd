@@ -1,6 +1,7 @@
-package com.next.travel.user_service.service;
+package com.next.travel.package_service.service;
 
-import com.next.travel.user_service.dto.PromotionDto;
+
+import com.next.travel.package_service.dto.PromotionDto;
 
 import java.util.List;
 

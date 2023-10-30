@@ -10,6 +10,5 @@ public interface UserService {
     boolean delete(String id);
     UserDto searchById(String id);
     List<UserDto> getAll();
-    String getLastId();
     boolean existById(String id);
 }

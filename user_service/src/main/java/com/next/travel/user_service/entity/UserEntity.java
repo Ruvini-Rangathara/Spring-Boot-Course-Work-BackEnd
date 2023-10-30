@@ -28,8 +28,4 @@ public class UserEntity {
     private byte[] nicOrPassportFront;
     private byte[] nicOrPassportBack;
     private String remark;
-
-
-    @OneToMany(mappedBy = "user")
-    private List<UserPromotionEntity> userPromotions = new ArrayList<>();
 }

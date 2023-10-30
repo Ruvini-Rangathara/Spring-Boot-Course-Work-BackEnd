@@ -2,8 +2,10 @@ package com.next.travel.package_service.util;
 
 import com.next.travel.package_service.dto.InsuranceDto;
 import com.next.travel.package_service.dto.PackageDto;
+import com.next.travel.package_service.dto.PromotionDto;
 import com.next.travel.package_service.entity.InsuranceEntity;
 import com.next.travel.package_service.entity.PackageEntity;
+import com.next.travel.package_service.entity.PromotionEntity;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
@@ -28,6 +30,17 @@ public class Convertor {
     }
     public InsuranceEntity getInsuranceEntity(InsuranceDto insuranceDto){
         return modelMapper.map(insuranceDto, InsuranceEntity.class);
+    }
+
+
+
+
+    public PromotionDto getPromotionDto(PromotionEntity promotionEntity){
+        return modelMapper.map(promotionEntity, PromotionDto.class);
+    }
+
+    public PromotionEntity getPromotionEntity(PromotionDto promotionDto){
+        return modelMapper.map(promotionDto, PromotionEntity.class);
     }
 
 

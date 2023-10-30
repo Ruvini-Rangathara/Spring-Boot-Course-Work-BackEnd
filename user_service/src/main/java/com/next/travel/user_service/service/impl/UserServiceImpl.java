@@ -60,10 +60,6 @@ public class UserServiceImpl implements UserService {
         return list;
     }
 
-    @Override
-    public String getLastId() {
-        return userRepo.getLastId();
-    }
 
     @Override
     public boolean existById(String id) {

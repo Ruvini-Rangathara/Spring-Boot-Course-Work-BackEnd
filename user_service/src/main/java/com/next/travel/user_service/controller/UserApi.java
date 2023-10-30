@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.regex.Pattern;
 
 @RestController
@@ -25,13 +26,13 @@ public class UserApi {
 
 
     @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> register(@RequestPart("nic_front") byte[] nic_front, @RequestPart("nic_back") byte[] nic_back, @RequestPart("user") UserDto userDto) {
+    public ResponseEntity<?> register(@RequestPart("nic_front") byte[] nic_front,
+                                      @RequestPart("nic_back") byte[] nic_back,
+                                      @RequestPart("user") UserDto userDto) {
         System.out.println("register");
         try {
             userDto.setRole("ROLE_USER");
             validateUserdata(userDto);
-
-            validateImages(nic_front, nic_back);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage(), null));
         }
@@ -41,18 +42,7 @@ public class UserApi {
         userDto.setNicOrPassportBack(nic_back);
         if (existsUserByUsername)
             return ResponseEntity.badRequest().body(new MessageResponse("Username already exists", null));
-
-
         return userService.save(userDto) ? ResponseEntity.ok().body(new MessageResponse("User registration successful", null)) : ResponseEntity.badRequest().body(new MessageResponse("User registration failed", null));
-    }
-
-    private void validateImages(byte[] nicFront, byte[] nicBack) {
-        try {
-            if (nicFront == null || nicFront.length == 0) throw new RuntimeException("NIC Front image is required.");
-            if (nicBack == null || nicBack.length == 0) throw new RuntimeException("NIC Back image is required.");
-        } catch (Exception e) {
-            throw new RuntimeException("Error validating images: " + e.getMessage());
-        }
     }
 
     private void validateUserdata(UserDto userDTO) throws RuntimeException {
@@ -82,32 +72,68 @@ public class UserApi {
             throw new UserValidationException("invalid role");
         }
     }
-/*
-if (!Pattern.compile("^U\\d{3,}$").matcher(userDTO.getUser_id()).matches())
-        throw new UserValidationException("Invalid userDTO id type!");
-*/
 
-    @GetMapping("/check/{username}")
-    public ResponseEntity<?> checkUsername(@PathVariable String username) {
-        Boolean existsUserByUsername = userService.existById(username);
+    @GetMapping("/check/")
+    public ResponseEntity<?> checkUsername(@RequestHeader String username) {
+        boolean existsUserByUsername = userService.existById(username);
         if (!existsUserByUsername) return ResponseEntity.ok(true);
         return ResponseEntity.badRequest().body(new MessageResponse("Username already exists", null));
     }
 
-    @GetMapping("/getnewid")
-    public ResponseEntity<?> getOngoingUserID() {
-        String newUserID = userService.getLastId();
-        return ResponseEntity.ok(new MessageResponse(newUserID, null));
-    }
 
-    public ResponseEntity<?> deleteUserByUsername(String username) {
+    @CrossOrigin(origins = "http://localhost:63342")
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteUserByUsername(@RequestHeader("username") String username) {
         if (!Pattern.compile("^U\\d{3,}$").matcher(username).matches())
             throw new UserValidationException("Invalid username type!");
-        Boolean existsUserByUsername = userService.existById(username);
+        boolean existsUserByUsername = userService.existById(username);
         if (existsUserByUsername) {
             return userService.delete(username) ? ResponseEntity.ok().body(new MessageResponse("User deleted successfully", null)) : ResponseEntity.ok().body(new MessageResponse("User deletion failed", null));
         }
         return ResponseEntity.badRequest().body(new MessageResponse("User not found", null));
     }
+
+    @GetMapping("/get")
+    public ResponseEntity<?> getUserById(@RequestHeader String username) {
+        System.out.println("user controller -> get user by username: " + username);
+        boolean isExists = userService.existById(username);
+        if (!isExists) return ResponseEntity.badRequest().body("User not found !");
+        UserDto userDto = userService.searchById(username);
+        return ResponseEntity.ok(userDto);
+    }
+
+    @CrossOrigin(origins = "http://localhost:63342")
+    @PutMapping(value = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> updateUser(@RequestPart("nic_front") byte[] nic_front,
+                                        @RequestPart("nic_back") byte[] nic_back,
+                                        @RequestPart("user") UserDto userDto) {
+
+        userDto.setNicOrPassportFront(nic_front);
+        userDto.setNicOrPassportBack(nic_back);
+
+        try {
+            validateUserdata(userDto);
+            System.out.println("validated in backend");
+            if (userService.existById(userDto.getUsername())) {
+                userService.save(userDto);
+                return ResponseEntity.ok().build();
+            }
+            return ResponseEntity.badRequest().body("User not found");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/getAll")
+    public ResponseEntity<?> getAll() {
+        System.out.println("User Controller -> getAll");
+        List<UserDto> allUsers = userService.getAll();
+        System.out.println(allUsers.size());
+        if (allUsers.isEmpty()) return ResponseEntity.ok().body("");
+        System.out.println("done");
+        return ResponseEntity.ok().body(allUsers);
+
+    }
+
 
 }

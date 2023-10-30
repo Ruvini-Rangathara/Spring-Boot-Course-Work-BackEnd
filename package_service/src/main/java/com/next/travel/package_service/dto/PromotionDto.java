@@ -1,4 +1,4 @@
-package com.next.travel.user_service.dto;
+package com.next.travel.package_service.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
