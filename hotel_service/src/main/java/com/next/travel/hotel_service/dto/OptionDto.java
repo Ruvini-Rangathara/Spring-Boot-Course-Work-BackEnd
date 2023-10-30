@@ -13,8 +13,4 @@ import java.io.Serializable;
 public class OptionDto implements Serializable {
     private int optionNumber;
     private double price;
-    private int capacity;
-    private int id;
-    @ToString.Exclude
-    private HotelDto hotelDto;
 }

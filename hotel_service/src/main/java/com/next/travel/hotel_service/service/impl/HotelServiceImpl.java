@@ -1,9 +1,7 @@
 package com.next.travel.hotel_service.service.impl;
 
 import com.next.travel.hotel_service.dto.HotelDto;
-import com.next.travel.hotel_service.dto.OptionDto;
 import com.next.travel.hotel_service.entity.HotelEntity;
-import com.next.travel.hotel_service.entity.OptionEntity;
 import com.next.travel.hotel_service.exception.NotFoundException;
 import com.next.travel.hotel_service.repository.HotelRepo;
 import com.next.travel.hotel_service.service.HotelService;
@@ -60,7 +58,14 @@ public class HotelServiceImpl implements HotelService {
 
     @Override
     public String getNewId() {
-        return hotelRepo.getNewId();
+
+        String lastId = hotelRepo.getNewId();
+        if (lastId == null) return "H0001";
+        String[] split = lastId.split("[H]");
+        int lastDigits = Integer.parseInt(split[1]);
+        lastDigits++;
+        System.out.println((String.format("H%04d", lastDigits)));
+        return (String.format("H%04d", lastDigits));
     }
 
     @Override

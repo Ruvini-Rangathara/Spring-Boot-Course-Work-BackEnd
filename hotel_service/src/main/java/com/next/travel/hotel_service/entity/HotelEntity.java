@@ -1,5 +1,6 @@
 package com.next.travel.hotel_service.entity;
 
+import com.next.travel.hotel_service.dto.OptionDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,12 +19,11 @@ public class HotelEntity implements Serializable {
     private String hotelCode;
     private String name;
     private String category;
-    private int startRate;
+    private int starRate;
     private String location;
     private String email;
 
-    @ElementCollection
-    private List<String> contactNo;
+    private String contactNo;
     private String petsAllowedOrNot;
     private String cancellationCriteria;
 
@@ -32,10 +32,8 @@ public class HotelEntity implements Serializable {
     @Column(name = "image", columnDefinition = "LONGBLOB")
     private List<byte[]> imageList = new ArrayList<>();
 
-    // Define the one-to-many relationship with DiscountEntity
-    @OneToMany(mappedBy = "hotel") // "hotel" refers to the property name in DiscountEntity
-    private List<DiscountEntity> discounts = new ArrayList<>();
-
-    @OneToMany(cascade ={ CascadeType.ALL}, fetch = FetchType.EAGER)
-    private List<OptionEntity> optionsList = new ArrayList<>();
+    private OptionDto optionDto1;
+    private OptionDto optionDto2;
+    private OptionDto optionDto3;
+    private OptionDto optionDto4;
 }

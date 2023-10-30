@@ -4,14 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class HotelDto implements Serializable {
+public class RequestHotelDto {
     private String hotelCode;
     private String name;
     private String category;
@@ -22,9 +21,8 @@ public class HotelDto implements Serializable {
     private String petsAllowedOrNot;
     private String cancellationCriteria;
     private List<byte[]> imageList = new ArrayList<>();
-    private OptionDto optionDto1;
-    private OptionDto optionDto2;
-    private OptionDto optionDto3;
-    private OptionDto optionDto4;
-
+    private double opt1_price;
+    private double opt2_price;
+    private double opt3_price;
+    private double opt4_price;
 }

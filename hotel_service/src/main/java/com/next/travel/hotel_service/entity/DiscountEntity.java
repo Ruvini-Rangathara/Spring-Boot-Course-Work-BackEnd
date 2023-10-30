@@ -20,7 +20,7 @@ public class DiscountEntity implements Serializable {
     private double upperRange;
     private double rate;
 
-    // Define the many-to-one relationship with HotelEntity
-    @ManyToOne
-    private HotelEntity hotel;
+//    // Define the many-to-one relationship with HotelEntity
+//    @ManyToOne
+//    private HotelEntity hotel;
 }

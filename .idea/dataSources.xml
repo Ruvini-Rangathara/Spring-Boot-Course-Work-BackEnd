@@ -15,5 +15,12 @@
       <jdbc-url>jdbc:mysql://localhost:3306/nt_guide</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="nt_hotel@localhost" uuid="d8a7c469-f179-45c9-b532-9bf1dc2f23bc">
+      <driver-ref>mysql.8</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://localhost:3306/nt_hotel</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>

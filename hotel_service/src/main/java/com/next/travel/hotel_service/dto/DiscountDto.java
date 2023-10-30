@@ -16,5 +16,5 @@ public class DiscountDto implements Serializable {
     private double lowerRange;
     private double upperRange;
     private double rate;
-    private HotelEntity hotel;
+//    private HotelEntity hotel;
 }
