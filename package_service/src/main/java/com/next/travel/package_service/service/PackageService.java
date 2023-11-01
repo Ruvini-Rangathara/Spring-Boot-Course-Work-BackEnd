@@ -1,16 +1,21 @@
 package com.next.travel.package_service.service;
 
 import com.next.travel.package_service.dto.*;
+import com.next.travel.package_service.entity.PackageEntity;
 
 import java.util.List;
 
 public interface PackageService {
-    PackageDto save(PackageDto packageDto);
+    PackageEntity save(PackageDto packageDto);
     PackageDto update(PackageDto packageDto);
     void delete(String id);
     PackageDto searchById(String id);
     List<PackageDto> getAll();
-    String getLastId();
+    String getNewId();
+    boolean existById(String id);
+
+
+
 
     GuideDto getFullProfileDataOfGuide(GuideDto guideDto);
 
@@ -18,5 +23,4 @@ public interface PackageService {
 
     HotelDto getFullProfileDataOfHotel(HotelDto hotelDto);
 
-    RoomDto getFullProfileDataOfRoom(RoomDto roomDto);
 }

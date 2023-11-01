@@ -46,27 +46,24 @@ public class UserApi {
     }
 
     private void validateUserdata(UserDto userDTO) throws RuntimeException {
-        if (!Pattern.compile("^([a-zA-Z]+( [a-zA-Z]+)*)$").matcher(userDTO.getUsername()).matches()) {
+        if (!Pattern.compile("^(?!\\s).{8,}$").matcher(userDTO.getUsername()).matches()) {
             System.out.println("invalid username");
-            throw new UserValidationException("Invalid userDTO name type!");
+            throw new UserValidationException("Invalid username type!");
         } else if (!(Pattern.compile("^([0-9]{9}[x|X|v|V]|[0-9]{12})$").matcher(userDTO.getNicOrPassportNo()).matches() | Pattern.compile("^(\\d{4})(\\d{3})(\\d{4})(\\d{1})$").matcher(userDTO.getNicOrPassportNo()).matches())) {
             System.out.println("invalid nic pattern");
             throw new UserValidationException("invalid nic pattern");
         } else if (!(Pattern.compile("^\\d+$").matcher(String.valueOf(userDTO.getAge())).matches() && userDTO.getAge() > 0)) {
             System.out.println("invalid age");
             throw new UserValidationException("invalid age");
-        } else if (!(userDTO.getGender().equalsIgnoreCase("male") || userDTO.getGender().equalsIgnoreCase("female"))) {
-            System.out.println("invalid gender");
-            throw new UserValidationException("invalid gender");
         } else if (!Pattern.compile("^([a-zA-Z0-9_.-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,})$").matcher(userDTO.getEmail()).matches()) {
             System.out.println("invalid email");
             throw new UserValidationException("Invalid email address!");
         } else if (!Pattern.compile("^\\d{10}$").matcher(userDTO.getContactNo()).matches()) {
             System.out.println("invalid contact number");
             throw new UserValidationException("Invalid contact number!");
-        } else if (userDTO.getPassword() == null) {
-            System.out.println("invalid password");
-            throw new UserValidationException("Password is null");
+//        } else if (!Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,}$").matcher(userDTO.getPassword()).matches()) {
+//            System.out.println("invalid password");
+//            throw new UserValidationException("Password is incorrect!");
         } else if (userDTO.getRole() == null) {
             System.out.println("invalid role");
             throw new UserValidationException("invalid role");
@@ -74,9 +71,10 @@ public class UserApi {
     }
 
     @GetMapping("/check/")
-    public ResponseEntity<?> checkUsername(@RequestHeader String username) {
-        boolean existsUserByUsername = userService.existById(username);
-        if (!existsUserByUsername) return ResponseEntity.ok(true);
+    public ResponseEntity<?> checkUsername(@RequestHeader String id) {
+        boolean existsUserByUsername = userService.existById(id);
+        System.out.println("check username: " + id  + " -> " + existsUserByUsername);
+        if (existsUserByUsername) return ResponseEntity.ok(true);
         return ResponseEntity.badRequest().body(new MessageResponse("Username already exists", null));
     }
 

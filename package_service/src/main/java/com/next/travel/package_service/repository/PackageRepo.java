@@ -10,12 +10,12 @@ import java.util.List;
 @Repository
 public interface PackageRepo extends CrudRepository<PackageEntity,String> {
 
-    PackageEntity save(PackageEntity packageEntity);
+//    Boolean save(PackageEntity packageEntity);
 
     PackageEntity getPackageByPackageId(String id);
 
     void deleteById(String id);
 
-//    PackageEntity update(PackageEntity packageEntity);
-
+    @Query("{ }")
+    PackageEntity findLastInsertedDocument();
 }
