@@ -2,7 +2,6 @@ package com.next.travel.auth_service.api;
 
 import com.next.travel.auth_service.dto.AuthRequestDTO;
 import com.next.travel.auth_service.dto.UserDTO;
-import com.next.travel.auth_service.dto.util.UserRole;
 import com.next.travel.auth_service.exception.InvalidException;
 import com.next.travel.auth_service.service.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -91,11 +90,9 @@ public class AuthController {
     @PutMapping(value = "{userId:^U\\d{3,}$}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     ResponseEntity<?> updateUser(
             @RequestPart UserDTO user,
-            @RequestPart(required = false) byte[] profile,//customer
-
-            @RequestPart(required = false) byte[] nicFrontImage,//admins
-            @RequestPart(required = false) byte[] nicBackImage,//admins
-            @RequestPart(required = false) String phone//admins
+            @RequestPart(required = false) byte[] profile,
+            @RequestPart(required = false) byte[] nicFrontImage,
+            @RequestPart(required = false) byte[] nicBackImage
     ) {
 
         validateUser(user);

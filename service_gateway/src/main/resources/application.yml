@@ -2,12 +2,6 @@ spring:
   cloud:
     gateway:
       routes:
-        - id: adminService
-          uri: http://localhost:9099/admin
-          predicates:
-            - Path=/admin/**
-          filters:
-            - AuthenticationFilter
 
         - id: packageService
           uri: http://localhost:9098/package
@@ -30,19 +24,10 @@ spring:
           filters:
             - AuthenticationFilter
 
-
-
         - id: vehicleService
           uri: http://localhost:9096/vehicle
           predicates:
             - Path=/vehicle/**
-          filters:
-            - AuthenticationFilter
-
-        - id: userService
-          uri: http://localhost:9099/user
-          predicates:
-            - Path=/user/**
           filters:
             - AuthenticationFilter
 

@@ -1,19 +1,20 @@
-package com.next.travel.package_service.dto;
+package com.next.travel.booking_service.entity;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.mongodb.core.mapping.Field;
-import org.springframework.data.mongodb.core.mapping.FieldType;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class PackageDto {
+@Entity
+public class BookingEntity {
+    @Id
     private String packageId;
 
     private String category;
@@ -31,8 +32,10 @@ public class PackageDto {
     private int noOfAdults;
     private double paidValue;
 
+    @Column(columnDefinition = "LONGBLOB")
     private byte[] paymentSlip1;
 
+    @Column(columnDefinition = "LONGBLOB")
     private byte[] paymentSlip2;
 
     private String claimedOrNot;
@@ -57,5 +60,4 @@ public class PackageDto {
     private String username;
     private String vehicleId;
     private String hotelCode;
-
 }

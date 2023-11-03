@@ -16,6 +16,7 @@
         <module name="vehicle_service" />
         <module name="guide_service" />
         <module name="services_registry" />
+        <module name="booking_service" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -28,6 +29,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="api_gateway" options="-parameters" />
       <module name="auth_service" options="-parameters" />
+      <module name="booking_service" options="-parameters" />
       <module name="guide_service" options="-parameters" />
       <module name="hotel_service" options="-parameters" />
       <module name="package_service" options="-parameters" />

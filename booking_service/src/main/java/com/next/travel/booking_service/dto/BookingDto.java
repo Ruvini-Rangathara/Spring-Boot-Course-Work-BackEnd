@@ -1,19 +1,15 @@
-package com.next.travel.package_service.dto;
+package com.next.travel.booking_service.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.mongodb.core.mapping.Field;
-import org.springframework.data.mongodb.core.mapping.FieldType;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class PackageDto {
+public class BookingDto {
     private String packageId;
 
     private String category;
