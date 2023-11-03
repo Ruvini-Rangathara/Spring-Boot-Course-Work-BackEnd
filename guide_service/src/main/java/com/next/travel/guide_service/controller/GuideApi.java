@@ -122,13 +122,22 @@ public class GuideApi {
         return ResponseEntity.ok(guideId);
     }
 
+    @CrossOrigin(origins = "http://localhost:63342")
     @GetMapping("/getAll")
-    public ResponseEntity<?> getAll() {
+    public ResponseEntity<List<GuideDto>> getAll() {
+
         System.out.println("Guide Controller -> getAll");
         List<GuideDto> allGuides = guideService.getAll();
+
         System.out.println(allGuides.size());
-        if (allGuides.isEmpty()) return ResponseEntity.ok().body("");
-        System.out.println("done");
+
+        for (GuideDto guideDto : allGuides) {
+            System.out.println(guideDto.getGuideId());
+        }
+        if (allGuides.isEmpty()) {
+            return ResponseEntity.noContent().build(); // Return a 204 No Content response
+        }
+
         return ResponseEntity.ok().body(allGuides);
 
     }

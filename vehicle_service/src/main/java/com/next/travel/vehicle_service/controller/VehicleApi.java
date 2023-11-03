@@ -78,15 +78,18 @@ public class VehicleApi {
     }
 
     @GetMapping("/getAll")
-    public ResponseEntity<?> getAll() {
-        System.out.println("Vehicle Controller -> getAll");
+    public ResponseEntity<List<VehicleDto>> getAll() {
+        System.out.println();
         List<VehicleDto> allVehicles = vehicleService.getAll();
-        System.out.println(allVehicles.size());
-        if (allVehicles.isEmpty()) return ResponseEntity.ok().body("No vehicles found");
-        System.out.println("done");
-        return ResponseEntity.ok().body(allVehicles);
-
+        for (VehicleDto vehicleDto : allVehicles) {
+            System.out.println(vehicleDto.getVehicleId());
+        }
+        if (allVehicles.isEmpty()) {
+            return ResponseEntity.noContent().build(); // Return a 204 No Content response
+        }
+        return ResponseEntity.ok(allVehicles);
     }
+
 
     @GetMapping("/check/")
     public ResponseEntity<?> existsByVehicleId(@RequestHeader String vehicle_id) {
