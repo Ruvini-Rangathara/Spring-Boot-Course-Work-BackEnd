@@ -9,6 +9,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="service_gateway" />
         <module name="user_service" />
+        <module name="auth_service" />
         <module name="hotel_service" />
         <module name="test" />
         <module name="package_service" />
@@ -26,6 +27,7 @@
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="api_gateway" options="-parameters" />
+      <module name="auth_service" options="-parameters" />
       <module name="guide_service" options="-parameters" />
       <module name="hotel_service" options="-parameters" />
       <module name="package_service" options="-parameters" />
