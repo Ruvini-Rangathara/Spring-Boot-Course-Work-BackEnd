@@ -188,6 +188,7 @@ public class GuideApi {
         boolean isExists = guideService.existById(id);
         if (!isExists) return ResponseEntity.badRequest().body("Guide not found !");
         GuideDto guide = guideService.searchById(id);
+        System.out.println("Contact No of "+guide.getGuideId()+" : "+guide.getContactNo());
         return ResponseEntity.ok(guide);
     }
 
