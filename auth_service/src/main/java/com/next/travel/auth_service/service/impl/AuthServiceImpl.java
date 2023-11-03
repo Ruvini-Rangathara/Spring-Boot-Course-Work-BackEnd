@@ -39,11 +39,6 @@ public class AuthServiceImpl implements AuthService {
         if (userDao.findByUsername(userDTO.getUsername()).isPresent())
             throw new DuplicateException("userName duplicated");
 
-        String userId;
-        do {
-            userId = String.format("U%S", UUID.randomUUID());
-        } while (userDao.findById(userId).isPresent());
-        userDTO.setUserId(userId);
 
         userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         return convertor.getUserDTO(userDao.save(convertor.getUser(userDTO)));
@@ -83,6 +78,7 @@ public class AuthServiceImpl implements AuthService {
         Optional<User> optionalUserForUserName = userDao.findByUsername(userDTO.getUsername());
         if (optionalUserForUserName.isPresent() && !optionalUserForUserName.get().getUserId().equals(userDTO.getUserId()))
             throw new DuplicateException("Duplicate userName");
+
         userDao.save(convertor.getUser(userDTO));
     }
 

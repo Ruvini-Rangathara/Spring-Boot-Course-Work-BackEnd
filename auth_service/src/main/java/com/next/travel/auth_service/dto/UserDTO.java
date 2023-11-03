@@ -20,10 +20,12 @@ public class UserDTO {
     private String username;
     private String password;
     private UserRole userRole;
+    private String phone;
+
     // customer
     private byte[] profile;
     // user
     private byte[] nicFrontImage;
     private byte[] nicBackImage;
-    private String phone;
+
 }

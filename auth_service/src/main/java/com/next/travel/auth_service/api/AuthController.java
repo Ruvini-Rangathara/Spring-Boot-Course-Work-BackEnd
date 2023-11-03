@@ -28,7 +28,7 @@ public class AuthController {
         return "Token is valid";
     }
 
-    @GetMapping("{userId:^[U][A-Fa-f0-9\\\\-]{36}$}")
+    @GetMapping("{userId:^U\\d{3,}$}")
     ResponseEntity<?> getSelectedUser(@PathVariable String userId) {
         return ResponseEntity.ok(userService.getSelectedUser(userId));
     }
@@ -56,155 +56,58 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(
-            @RequestPart String name,
-            @RequestPart String nic,
-            @RequestPart String email,
-            @RequestPart String address,
-            @RequestPart String userName,
-            @RequestPart String password,
-            @RequestPart String userRole,
-
+            @RequestPart UserDTO user,
             @RequestPart(required = false) byte[] profile,//customer
-
-            @RequestPart(required = false) byte[] nicFrontImage,//admins
-            @RequestPart(required = false) byte[] nicBackImage,//admins
-            @RequestPart(required = false) String phone//admins
+            @RequestPart(required = false) byte[] nicFrontImage,//admin
+            @RequestPart(required = false) byte[] nicBackImage
     ) {
-        if (userRole == null)
-            throw new InvalidException("InValid role");
-        if (name == null || !Pattern.matches("^[a-zA-Z.+=@\\-_\\s]{3,50}$", name))
-            throw new InvalidException("InValid name");
-        if (nic == null || !Pattern.matches("^[0-9]{9}[vVxX]||[0-9]{12}$", nic))
-            throw new InvalidException("InValid nic");
-        if (email == null || !Pattern.matches("^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$", email))
-            throw new InvalidException("InValid email");
-        if (address == null)
-            throw new InvalidException("InValid address");
-        if (userName == null || !Pattern.matches("^[a-z]{5,15}$", userName))
-            throw new InvalidException("InValid userName, use only simple letter for username");
-        if (password == null || !Pattern.matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$", password))
-            throw new InvalidException("InValid password");
+        validateUser(user);
 
-        if (userRole.equals("CUSTOMER")) {
-            if (profile.length == 0)
-                throw new InvalidException("InValid profile image");
-            return ResponseEntity.ok(userService.saveUser(
-                    UserDTO.builder()
-                            .name(name)
-                            .nic(nic)
-                            .email(email)
-                            .address(address)
-                            .username(userName)
-                            .password(password)
-                            .userRole(UserRole.CUSTOMER)
+        user.setNicFrontImage(nicFrontImage);
+        user.setNicBackImage(nicBackImage);
+        user.setProfile(profile);
 
-                            .profile(profile)
-                            .build()
-            ));
-        } else if (userRole.equals("USER") || userRole.equals("ADMIN")) {
-            if (nicFrontImage.length == 0)
-                throw new InvalidException("InValid nic front image");
-            if (nicBackImage.length == 0)
-                throw new InvalidException("InValid nic back image");
-            if (phone == null)
-                throw new InvalidException("InValid phone number");
-            return ResponseEntity.ok(userService.saveUser(
-                    UserDTO.builder()
-                            .name(name)
-                            .nic(nic)
-                            .email(email)
-                            .address(address)
-                            .username(userName)
-                            .password(password)
-                            .userRole(userRole.equals("USER") ? UserRole.USER : UserRole.ADMIN)
-
-                            .nicFrontImage(nicFrontImage)
-                            .nicBackImage(nicBackImage)
-                            .phone(phone)
-                            .build()
-            ));
-        } else
-            throw new InvalidException("InValid role");
+        return ResponseEntity.ok(userService.saveUser(user));
     }
 
-    @PutMapping(value = "{userId:^[U][A-Fa-f0-9\\\\-]{36}$}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+
+    void validateUser(UserDTO user){
+        if (user.getUserRole() == null)
+            throw new InvalidException("InValid role");
+        if (user.getName() == null || !Pattern.matches("^[a-zA-Z.+=@\\-_\\s]{3,50}$", user.getName()))
+            throw new InvalidException("InValid name");
+        if (user.getNic() == null || !Pattern.matches("^[0-9]{9}[vVxX]||[0-9]{12}$", user.getNic()))
+            throw new InvalidException("InValid nic");
+        if (user.getEmail() == null || !Pattern.matches("^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$", user.getEmail()))
+            throw new InvalidException("InValid email");
+        if (user.getAddress() == null)
+            throw new InvalidException("InValid address");
+        if (user.getUsername() == null || !Pattern.matches("^[a-z]{5,15}$", user.getUsername()))
+            throw new InvalidException("InValid userName, use only simple letter for username");
+        if (user.getPassword() == null || !Pattern.matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$", user.getPassword()))
+            throw new InvalidException("InValid password");
+    }
+
+    @PutMapping(value = "{userId:^U\\d{3,}$}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     ResponseEntity<?> updateUser(
-            @PathVariable String userId,
-            @RequestPart String name,
-            @RequestPart String nic,
-            @RequestPart String email,
-            @RequestPart String address,
-            @RequestPart String userName,
-            @RequestPart String password,
-            @RequestPart String userRole,
-
+            @RequestPart UserDTO user,
             @RequestPart(required = false) byte[] profile,//customer
 
             @RequestPart(required = false) byte[] nicFrontImage,//admins
             @RequestPart(required = false) byte[] nicBackImage,//admins
             @RequestPart(required = false) String phone//admins
     ) {
-        if (userRole == null)
-            throw new InvalidException("InValid role");
-        if (name == null || !Pattern.matches("^[a-zA-Z.+=@\\-_\\s]{3,50}$", name))
-            throw new InvalidException("InValid name");
-        if (nic == null || !Pattern.matches("^[0-9]{9}[vVxX]||[0-9]{12}$", nic))
-            throw new InvalidException("InValid nic");
-        if (email == null || !Pattern.matches("^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$", email))
-            throw new InvalidException("InValid email");
-        if (address == null)
-            throw new InvalidException("InValid address");
-        if (userName == null || !Pattern.matches("^[a-z]{5,15}$", userName))
-            throw new InvalidException("InValid userName, use only simple letter for username");
-        if (password == null || !Pattern.matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$", password))
-            throw new InvalidException("InValid password");
 
-        if (userRole.equals("CUSTOMER")) {
-            if (profile.length == 0)
-                throw new InvalidException("InValid profile image");
-            userService.updateUser(
-                    UserDTO.builder()
-                            .name(name)
-                            .nic(nic)
-                            .email(email)
-                            .address(address)
-                            .username(userName)
-                            .password(password)
-                            .userRole(UserRole.CUSTOMER)
+        validateUser(user);
 
-                            .profile(profile)
-                            .build()
-            );
-            return ResponseEntity.ok("User updated");
-        } else if (userRole.equals("USER") || userRole.equals("ADMIN")) {
-            if (nicFrontImage.length == 0)
-                throw new InvalidException("InValid nic front image");
-            if (nicBackImage.length == 0)
-                throw new InvalidException("InValid nic back image");
-            if (phone == null)
-                throw new InvalidException("InValid phone number");
-            userService.updateUser(
-                    UserDTO.builder()
-                            .name(name)
-                            .nic(nic)
-                            .email(email)
-                            .address(address)
-                            .username(userName)
-                            .password(password)
-                            .userRole(userRole.equals("USER") ? UserRole.USER : UserRole.ADMIN)
+        user.setNicFrontImage(nicFrontImage);
+        user.setNicBackImage(nicBackImage);
+        user.setProfile(profile);
 
-                            .nicFrontImage(nicFrontImage)
-                            .nicBackImage(nicBackImage)
-                            .phone(phone)
-                            .build()
-            );
-            return ResponseEntity.ok("User updated");
-        } else {
-            throw new InvalidException("InValid role");
-        }
+        return ResponseEntity.ok(userService.saveUser(user));
     }
 
-    @DeleteMapping("{userId:^[U][A-Fa-f0-9\\\\-]{36}$}")
+    @DeleteMapping("{userId:^U\\d{3,}$}")
     ResponseEntity<?> deleteUser(@PathVariable String userId) {
         userService.deleteUser(userId);
         return ResponseEntity.ok("User deleted");
