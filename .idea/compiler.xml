@@ -14,10 +14,12 @@
         <module name="package_service" />
         <module name="vehicle_service" />
         <module name="guide_service" />
+        <module name="services_registry" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="api_gateway" target="17" />
+      <module name="service_registry" target="17" />
       <module name="test" target="17" />
     </bytecodeTargetLevel>
   </component>
@@ -28,6 +30,8 @@
       <module name="hotel_service" options="-parameters" />
       <module name="package_service" options="-parameters" />
       <module name="service_gateway" options="-parameters" />
+      <module name="service_registry" options="-parameters" />
+      <module name="services_registry" options="-parameters" />
       <module name="test" options="-parameters" />
       <module name="user_service" options="-parameters" />
       <module name="vehicle_service" options="-parameters" />
