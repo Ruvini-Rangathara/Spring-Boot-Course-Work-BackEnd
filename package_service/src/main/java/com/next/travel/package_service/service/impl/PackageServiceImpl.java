@@ -65,10 +65,10 @@ public class PackageServiceImpl implements PackageService {
     @Override
     public String getNewId() {
 
-        PackageEntity lastInsertedDocument = packageRepo.findLastInsertedDocument();
+        List<PackageEntity> list = packageRepo.findLastInsertedId();
         String lastInsertedId;
-        if (lastInsertedDocument != null) {
-            lastInsertedId = lastInsertedDocument.getPackageId();
+        if (list.get(0) != null) {
+            lastInsertedId = list.get(0).getPackageId();
             System.out.println("Last inserted document _id: " + lastInsertedId);
             String[] split = lastInsertedId.split("[P]");
             int lastDigits = Integer.parseInt(split[1]);
@@ -84,6 +84,16 @@ public class PackageServiceImpl implements PackageService {
     @Override
     public boolean existById(String id) {
         return packageRepo.existsById(id);
+    }
+
+    @Override
+    public List<PackageDto> getAllByStatus(String status) {
+        List<PackageEntity> all = packageRepo.findAllByStatus(status);
+        List<PackageDto> list = new ArrayList<>();
+        for (PackageEntity entity : all) {
+            list.add(convertor.getPackageDTO(entity));
+        }
+        return list;
     }
 
     @Override

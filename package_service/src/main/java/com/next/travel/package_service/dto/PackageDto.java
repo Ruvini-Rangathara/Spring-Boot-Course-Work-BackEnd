@@ -58,4 +58,6 @@ public class PackageDto {
     private String vehicleId;
     private String hotelCode;
 
+    private String status;
+
 }

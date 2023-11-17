@@ -25,6 +25,7 @@
     <option name="ignoredFiles">
       <set>
         <option value="$PROJECT_DIR$/api_gateway/pom.xml" />
+        <option value="$PROJECT_DIR$/booking_service/pom.xml" />
         <option value="$PROJECT_DIR$/gateway/pom.xml" />
         <option value="$PROJECT_DIR$/service_registry/pom.xml" />
         <option value="$PROJECT_DIR$/test/pom.xml" />

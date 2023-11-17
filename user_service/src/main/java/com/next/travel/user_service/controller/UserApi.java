@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping("/api/v1/user")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:63342")
 public class UserApi {
 
     private final UserService userService;
@@ -25,6 +25,7 @@ public class UserApi {
     }
 
 
+    @CrossOrigin(origins = "http://localhost:63342")
     @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> register(@RequestPart("nic_front") byte[] nic_front,
                                       @RequestPart("nic_back") byte[] nic_back,
@@ -70,12 +71,12 @@ public class UserApi {
         }
     }
 
+    @CrossOrigin(origins = "http://localhost:63342")
     @GetMapping("/check/")
     public ResponseEntity<?> checkUsername(@RequestHeader String id) {
-        boolean existsUserByUsername = userService.existById(id);
-        System.out.println("check username: " + id  + " -> " + existsUserByUsername);
-        if (existsUserByUsername) return ResponseEntity.ok(true);
-        return ResponseEntity.badRequest().body(new MessageResponse("Username already exists", null));
+        boolean isExists = userService.existById(id);
+        if (isExists) return ResponseEntity.ok(true);
+        return ResponseEntity.ok().body(false);
     }
 
 
@@ -91,6 +92,7 @@ public class UserApi {
         return ResponseEntity.badRequest().body(new MessageResponse("User not found", null));
     }
 
+    @CrossOrigin(origins = "http://localhost:63342")
     @GetMapping("/get")
     public ResponseEntity<?> getUserById(@RequestHeader String username) {
         System.out.println("user controller -> get user by username: " + username);

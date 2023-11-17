@@ -16,6 +16,8 @@ public interface PackageRepo extends CrudRepository<PackageEntity,String> {
 
     void deleteById(String id);
 
-    @Query("{ }")
-    PackageEntity findLastInsertedDocument();
+    @Query(value = "{}", sort = "{packageId: -1}", fields = "{packageId: 1}")
+    List<PackageEntity> findLastInsertedId();
+
+    List<PackageEntity> findAllByStatus(String status);
 }

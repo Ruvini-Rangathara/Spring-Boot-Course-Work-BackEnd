@@ -27,14 +27,14 @@ public class AuthController {
         return "Token is valid";
     }
 
-    @GetMapping("{userId:^U\\d{3,}$}")
-    ResponseEntity<?> getSelectedUser(@PathVariable String userId) {
-        return ResponseEntity.ok(userService.getSelectedUser(userId));
+    @GetMapping("/get")
+    ResponseEntity<?> getSelectedUser(@RequestHeader String id) {
+        return ResponseEntity.ok(userService.getSelectedUser(id));
     }
 
-    @GetMapping("{userName:^[a-z]{5,15}$}")
-    ResponseEntity<?> getSelectedUserByUserName(@PathVariable String userName) {
-        return ResponseEntity.ok(userService.getSelectedUserByUserName(userName));
+    @GetMapping("/getByUsername")
+    ResponseEntity<?> getSelectedUserByUserName(@RequestHeader String username) {
+        return ResponseEntity.ok(userService.getSelectedUserByUserName(username));
     }
 
     @GetMapping
@@ -56,9 +56,9 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(
             @RequestPart UserDTO user,
-            @RequestPart(required = false) byte[] profile,//customer
-            @RequestPart(required = false) byte[] nicFrontImage,//admin
-            @RequestPart(required = false) byte[] nicBackImage
+            @RequestPart("profile") byte[] profile,//customer
+            @RequestPart("nic_front")  byte[] nicFrontImage,//admin
+            @RequestPart("nic_back")  byte[] nicBackImage
     ) {
         validateUser(user);
 
@@ -87,12 +87,12 @@ public class AuthController {
             throw new InvalidException("InValid password");
     }
 
-    @PutMapping(value = "{userId:^U\\d{3,}$}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     ResponseEntity<?> updateUser(
             @RequestPart UserDTO user,
-            @RequestPart(required = false) byte[] profile,
-            @RequestPart(required = false) byte[] nicFrontImage,
-            @RequestPart(required = false) byte[] nicBackImage
+            @RequestPart("profile")  byte[] profile,
+            @RequestPart("nic_front")  byte[] nicFrontImage,
+            @RequestPart("nic_back")  byte[] nicBackImage
     ) {
 
         validateUser(user);
@@ -104,9 +104,9 @@ public class AuthController {
         return ResponseEntity.ok(userService.saveUser(user));
     }
 
-    @DeleteMapping("{userId:^U\\d{3,}$}")
-    ResponseEntity<?> deleteUser(@PathVariable String userId) {
-        userService.deleteUser(userId);
+    @DeleteMapping
+    ResponseEntity<?> deleteUser(@RequestHeader("id") String id) {
+        userService.deleteUser(id);
         return ResponseEntity.ok("User deleted");
     }
 }

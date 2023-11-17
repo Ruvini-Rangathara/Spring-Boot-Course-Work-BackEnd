@@ -61,4 +61,6 @@ public class PackageEntity {
     private String username;
     private String vehicleId;
     private String hotelCode;
+
+    private String status;
 }

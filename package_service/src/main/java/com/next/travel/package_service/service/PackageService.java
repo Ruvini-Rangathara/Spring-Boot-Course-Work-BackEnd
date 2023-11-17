@@ -14,6 +14,8 @@ public interface PackageService {
     String getNewId();
     boolean existById(String id);
 
+    List<PackageDto> getAllByStatus(String status);
+
 
 
 

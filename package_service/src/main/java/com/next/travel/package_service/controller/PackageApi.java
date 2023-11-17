@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping("/api/v1/package")
-@CrossOrigin("*")
+@CrossOrigin(origins = "http://localhost:63342")
 public class PackageApi {
 
     private final PackageService packageService;
@@ -44,6 +44,8 @@ public class PackageApi {
                                         @RequestPart("slip1") byte[] slip1,
                                         @RequestPart("slip2") byte[] slip2) {
 
+        packageDto.setPaymentSlip1(slip1);
+        packageDto.setPaymentSlip2(slip2);
         packageService.save(packageDto);
 
         try {
@@ -70,7 +72,12 @@ public class PackageApi {
 
     @CrossOrigin(origins = "http://localhost:63342")
     @PutMapping(value = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> updatePackage(@RequestPart PackageDto packageDto) {
+    public ResponseEntity<?> updatePackage(@RequestPart ("package") PackageDto packageDto,
+                                           @RequestPart("slip1") byte[] slip1,
+                                           @RequestPart("slip2") byte[] slip2) {
+
+        packageDto.setPaymentSlip1(slip1);
+        packageDto.setPaymentSlip2(slip2);
         validatePackageData(packageDto);
         packageService.update(packageDto);
 
@@ -162,11 +169,11 @@ public class PackageApi {
         if (!Pattern.compile("^P\\d{3,}$").matcher(packageDto.getPackageId()).matches()) {
             throw new InvalidException("Invalid id type!");
 
-        } else if (!Pattern.compile("^\\d+\\.\\d{2}$\n").matcher(String.valueOf(packageDto.getPackageValue())).matches()) {
-            throw new InvalidException("Invalid package value!");
+//        } else if (!Pattern.compile("^\\d+\\.\\d{2}$\n").matcher(String.valueOf(packageDto.getPackageValue())).matches()) {
+//            throw new InvalidException("Invalid package value!");
 
-        } else if (!Pattern.compile("^\\d+\\.\\d{2}$\n").matcher(String.valueOf(packageDto.getPaidValue())).matches()) {
-            throw new InvalidException("Invalid paid value!");
+//        } else if (!Pattern.compile("^\\d+\\.\\d{2}$\n").matcher(String.valueOf(packageDto.getPaidValue())).matches()) {
+//            throw new InvalidException("Invalid paid value!");
 
         } else if (!Pattern.compile("^\\d+$").matcher(String.valueOf(packageDto.getNoOfNights())).matches()) {
             throw new InvalidException("Invalid No Of Nights!");
@@ -183,5 +190,15 @@ public class PackageApi {
 
     }
 
+    @GetMapping("/getByStatus")
+    public ResponseEntity<?> getAllByStatus(@RequestHeader String status) {
+        System.out.println("Package Controller -> getAll by status");
+        List<PackageDto> allPackages = packageService.getAllByStatus(status);
+        System.out.println(allPackages.size());
+        if (allPackages.isEmpty()) return ResponseEntity.ok().body("");
+        System.out.println("done");
+        return ResponseEntity.ok().body(allPackages);
+
+    }
 
 }

@@ -16,11 +16,11 @@
         <module name="vehicle_service" />
         <module name="guide_service" />
         <module name="services_registry" />
-        <module name="booking_service" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="api_gateway" target="17" />
+      <module name="booking_service" target="17" />
       <module name="service_registry" target="17" />
       <module name="test" target="17" />
     </bytecodeTargetLevel>
